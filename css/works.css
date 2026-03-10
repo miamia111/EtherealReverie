@@ -1,0 +1,67 @@
+/* 作品展示页 */
+.page-intro {
+  margin-bottom: 2.5rem;
+}
+
+.page-title {
+  font-size: clamp(1.8rem, 4vw, 2.2rem);
+  letter-spacing: 0.08em;
+  margin-bottom: 0.5rem;
+}
+
+.page-lead {
+  font-size: 1rem;
+  color: var(--text-muted);
+  font-weight: 300;
+}
+
+.works-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2.5rem;
+}
+
+.work-item {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  transition: box-shadow 0.25s;
+}
+
+.work-item:hover {
+  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+}
+
+.work-item:target {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+
+.work-image {
+  aspect-ratio: 1;
+  width: 100%;
+}
+
+.work-meta {
+  padding: 1.5rem 1.5rem 1.75rem;
+}
+
+.work-year {
+  font-size: 0.8rem;
+  color: var(--accent);
+  letter-spacing: 0.05em;
+  display: block;
+  margin-bottom: 0.4rem;
+}
+
+.work-meta h2 {
+  font-size: 1.2rem;
+  margin-bottom: 0.35rem;
+  font-weight: 600;
+}
+
+.work-meta p {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  font-weight: 300;
+}

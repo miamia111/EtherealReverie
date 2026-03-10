@@ -1,0 +1,96 @@
+/* 主页样式 */
+.hero {
+  text-align: left;
+  padding: 1.5rem 0 3rem;
+  min-height: 30vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  max-width: 26rem;
+}
+
+.hero-title {
+  font-size: clamp(3rem, 8vw, 5rem);
+  letter-spacing: 0.18em;
+  margin-bottom: 0.5rem;
+}
+
+.hero-subtitle {
+  font-size: 1rem;
+  letter-spacing: 0.3em;
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+  font-weight: 300;
+}
+
+.hero-desc {
+  font-size: 1.1rem;
+  max-width: 420px;
+  margin: 0 auto 2rem;
+  color: var(--text-muted);
+  font-weight: 300;
+}
+
+.hero .btn {
+  margin-top: 0.5rem;
+  background: rgba(255, 0, 229, 0.36);
+  color: var(--accent) !important;
+  border-radius: 20px;
+}
+
+/* 精选作品区 */
+.section-title {
+  font-size: 1.5rem;
+  letter-spacing: 0.1em;
+  margin-bottom: 2rem;
+  text-align: center;
+  color: var(--text);
+}
+
+.featured-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2.5rem;
+}
+
+.featured-card {
+  display: block;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  transition: transform 0.25s, box-shadow 0.25s;
+  color: var(--text);
+}
+
+.featured-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.08);
+}
+
+.card-image {
+  aspect-ratio: 4/3;
+  width: 100%;
+}
+
+.card-info {
+  padding: 1.25rem 1.5rem;
+}
+
+.card-year {
+  font-size: 0.8rem;
+  color: var(--accent);
+  letter-spacing: 0.05em;
+  display: block;
+  margin-bottom: 0.35rem;
+}
+
+.card-info h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.featured-cta {
+  text-align: center;
+}

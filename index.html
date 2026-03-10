@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Si Wu — Artist Portfolio</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/home.css">
+  <style>
+  
+
+    #silk-canvas {
+      position: fixed;   /* 背景固定 */
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;       /* 保证内容在上层显示 */
+    }
+  </style>
+</head>
+<body>
+  <!-- Silk 背景 Canvas -->
+  <canvas id="silk-bg"></canvas>
+  <header class="site-header">
+    <div class="site-header-inner">
+      <div class="logo"><a href="index.html">Si Wu</a></div>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="index.html" class="active">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="works.html">Works</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h1 class="hero-title">Si Wu</h1>
+      <p class="hero-subtitle">Painting · Installation · Conceptual</p>
+      <p class="hero-desc">Exploring the boundaries of memory and time through colour and space.</p>
+      <a href="about.html" class="btn">Learn more</a>
+    </section>
+
+    <section class="featured">
+      <h2 class="section-title">Selected works</h2>
+      <div class="featured-grid">
+        <a href="works.html#work-1" class="featured-card">
+          <div class="card-image" style="background: linear-gradient(135deg, #2c2419 0%, #5c4a3a 100%);"></div>
+          <div class="card-info">
+            <span class="card-year">2024</span>
+            <h3>Untitled · Series I</h3>
+          </div>
+        </a>
+        <a href="works.html#work-2" class="featured-card">
+          <div class="card-image" style="background: linear-gradient(135deg, #3d3a35 0%, #6b6458 100%);"></div>
+          <div class="card-info">
+            <span class="card-year">2024</span>
+            <h3>Overlapping Shadows</h3>
+          </div>
+        </a>
+        <a href="works.html#work-3" class="featured-card">
+          <div class="card-image" style="background: linear-gradient(135deg, #4a4035 0%, #8b7355 50%, #c4a77d 100%);"></div>
+          <div class="card-info">
+            <span class="card-year">2023</span>
+            <h3>Time Slices</h3>
+          </div>
+        </a>
+      </div>
+      <p class="featured-cta"><a href="works.html" class="btn btn-outline">See all works</a></p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>© 2024 Si Wu · Artist portfolio</p>
+  </footer>
+  <script src="js/silk.js"></script>
+</body>
+</html>
