@@ -1,96 +1,259 @@
+
+/* 动态背景 */
+#vanta-halo {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+/* 页面内容在背景上 */
+
+.site-header,
+main,
+.site-footer{
+  position: relative;
+  z-index: 2;
+}
+
+/* 主内容区 */
+.home main {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 3rem clamp(2rem, 6vw, 8rem) 1rem;
+  background: rgba(23, 14, 51, 0);
+  border-radius: 32px;
+}
+
 /* 主页样式 */
 .hero {
-  text-align: left;
-  padding: 1.5rem 0 3rem;
-  min-height: 30vh;
+  height: 50vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: flex-start;
-  max-width: 26rem;
+  align-items: flex-start; /* 防止按钮被拉宽 */
+  padding-top: clamp(2rem, 4vw, 3rem);  /* 控制往上移动 */
+  padding-bottom: 9rem;
+  max-width: 720px;   /* 控制文字宽度 */
 }
-
-.hero-title {
-  font-size: clamp(3rem, 8vw, 5rem);
-  letter-spacing: 0.18em;
-  margin-bottom: 0.5rem;
-}
-
-.hero-subtitle {
-  font-size: 1rem;
-  letter-spacing: 0.3em;
-  color: var(--text-muted);
-  margin-bottom: 1.5rem;
-  font-weight: 300;
-}
+  
 
 .hero-desc {
-  font-size: 1.1rem;
-  max-width: 420px;
-  margin: 0 auto 2rem;
+  font-size: 1.05rem;
+  max-width: 520px;
+  margin-bottom: 2rem;
   color: var(--text-muted);
   font-weight: 300;
 }
 
 .hero .btn {
-  margin-top: 0.5rem;
+  margin-top: 0.8rem;
+  padding: 0.6rem 1.4rem;
   background: rgba(255, 0, 229, 0.36);
   color: var(--accent) !important;
   border-radius: 20px;
+  display: inline-block;
 }
 
-/* 精选作品区 */
+.hero-title {
+  font-size: clamp(3rem, 6vw, 5rem);
+  letter-spacing: 0.02em;
+}
+
+.hero-subtitle {
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+
+.featured {
+  margin-top: 1rem;
+  margin-bottom: 4rem;
+}
+
 .section-title {
-  font-size: 1.5rem;
-  letter-spacing: 0.1em;
+  font-size: 1.6rem;
   margin-bottom: 2rem;
-  text-align: center;
-  color: var(--text);
+  letter-spacing: 2px;
 }
 
-.featured-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
-  margin-bottom: 2.5rem;
-}
+.featured-slider{
+  margin-top:2rem;
+  }
+  
+  .featured-carousel{
+  position:relative;
+  height:60vh;
+  overflow:hidden;
+  border-radius:16px;
+  }
+  
+  /* slide */
+  
+  .featured-slide{
+  position:absolute;
+  inset:0;
+  opacity:0;
+  transition:opacity 1s ease;
+  }
+  
+  .featured-slide.active{
+  opacity:1;
+  z-index:2;
+  }
+  
+  /* 图片 */
+  
+  .featured-image{
+  width:100%;
+  height:100%;
+  background-size:cover;
+  background-position:center;
+  filter:grayscale(50%);
+  transition:filter .8s ease, transform .8s ease;
+  }
+  
+  .featured-slide:hover .featured-image{
+  filter:grayscale(0%);
+  transform:scale(1.05);
+  }
+  
+  /* 大标题 */
+  
+  .featured-main-title{
+  
+  position:absolute;
+  top:50%;
+  left:50%;
+  
+  transform:translate(-50%,-50%);
+  
+  font-size:clamp(3rem,7vw,6rem);
+  
+  letter-spacing:.15em;
+  text-transform:uppercase;
+  
+  color:white;
+  
 
-.featured-card {
-  display: block;
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  overflow: hidden;
-  transition: transform 0.25s, box-shadow 0.25s;
-  color: var(--text);
-}
+  z-index:3;   /* 保证在图片上 */
 
-.featured-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 32px rgba(0,0,0,0.08);
-}
+pointer-events:none; /* 不影响点击 */
 
-.card-image {
-  aspect-ratio: 4/3;
-  width: 100%;
+opacity:0.9;
 }
-
-.card-info {
-  padding: 1.25rem 1.5rem;
-}
-
-.card-year {
-  font-size: 0.8rem;
-  color: var(--accent);
-  letter-spacing: 0.05em;
-  display: block;
-  margin-bottom: 0.35rem;
-}
-
-.card-info h3 {
-  font-size: 1.15rem;
-  font-weight: 600;
-}
+  
+  
+  
+  /* 作品信息 */
+  
+  .featured-info{
+  
+  position:absolute;
+  bottom:40px;
+  left:40px;
+  
+  opacity:0;
+  transform:translateY(20px);
+  
+  transition:all .4s ease;
+  
+  color:white;
+  }
+  
+  .featured-slide:hover .featured-info{
+  opacity:1;
+  transform:translateY(0);
+  }
+  
+  .featured-info h3{
+  font-size:clamp(1.6rem,2vw,2rem);
+  }
+  
+  .featured-info p{
+  opacity:.8;
+  }
 
 .featured-cta {
   text-align: center;
+  margin-top: 2.5rem; /* 调整按钮下移 */
 }
+
+
+/* Exhibition Section */
+.exhibition {
+  margin-top: 4rem; /* 和上一部分间距 */
+}
+
+.exhibition-card {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 60vh; /* 填满屏幕高度，可根据需要调整 */
+  border-radius: 16px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.exhibition-card:hover {
+  transform: scale(1.02); /* hover 放大效果 */
+}
+
+.exhibition-image {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  filter: grayscale(50%); /* 默认灰度可调 */
+  transition: filter 0.8s ease, transform 0.5s ease;
+}
+
+.exhibition-card:hover .exhibition-image {
+  filter: grayscale(0); /* hover时彩色 */
+  transform: scale(1.05);
+}
+
+/* 大标题 */
+.exhibition-main-title {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: clamp(3rem, 8vw, 6rem); /* 自适应大屏/小屏 */
+  color: rgba(255, 255, 255, 0.8);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  pointer-events: none; /* 避免影响点击 */
+  z-index: 2;
+}
+
+/* 展览信息浮现 */
+.exhibition-info {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  color: #fff;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.exhibition-card:hover .exhibition-info {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.exhibition-title {
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  margin: 0;
+}
+
+.exhibition-meta {
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  margin: 0.3rem 0 0 0;
+}
+
+
