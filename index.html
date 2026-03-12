@@ -17,7 +17,7 @@
 }
   </style>
 </head>
-<body>
+<body class="home">
   <div id="vanta-halo"></div>
   <header class="site-header">
     <div class="site-header-inner">
@@ -27,6 +27,7 @@
           <li><a href="index.html" class="active">Home</a></li>
           <li><a href="about.html">About</a></li>
           <li><a href="works.html">Works</a></li>
+          <li><a href="exhibition.html">Exhibitions</a></li>
         </ul>
       </nav>
     </div>
@@ -34,45 +35,68 @@
 
   <main>
     <section class="hero">
-      <h1 class="hero-title">Si Wu</h1>
-      <p class="hero-subtitle">Painting · Installation · Conceptual</p>
-      <p class="hero-desc">Exploring the boundaries of memory and time through colour and space.</p>
+      <h1 class="hero-title">SI WU</h1>
+      <p class="hero-subtitle">ARTIST</p>
+      <p class="hero-desc">Exploring the boundaries of fear through colour and femininity.</p>
       <a href="about.html" class="btn">Learn more</a>
     </section>
-
-    <section class="featured">
-      <h2 class="section-title">Selected works</h2>
-      <div class="featured-grid">
-        <a href="works.html#work-1" class="featured-card">
-          <div class="card-image" style="background: linear-gradient(135deg, #2c2419 0%, #5c4a3a 100%);"></div>
-          <div class="card-info">
-            <span class="card-year">2024</span>
-            <h3>Untitled · Series I</h3>
-          </div>
-        </a>
-        <a href="works.html#work-2" class="featured-card">
-          <div class="card-image" style="background: linear-gradient(135deg, #3d3a35 0%, #6b6458 100%);"></div>
-          <div class="card-info">
-            <span class="card-year">2024</span>
-            <h3>Overlapping Shadows</h3>
-          </div>
-        </a>
-        <a href="works.html#work-3" class="featured-card">
-          <div class="card-image" style="background: linear-gradient(135deg, #4a4035 0%, #8b7355 50%, #c4a77d 100%);"></div>
-          <div class="card-info">
-            <span class="card-year">2023</span>
-            <h3>Time Slices</h3>
-          </div>
-        </a>
-      </div>
-      <p class="featured-cta"><a href="works.html" class="btn btn-outline">See all works</a></p>
+    <!-- 展览展示位 -->
+    <section class="exhibition">
+      <a href="exhibition.html" class="exhibition-card">
+        <div class="exhibition-image" style="background-image: url('img/Hmwork/Ex1.webp');"></div>
+        
+        <h2 class="exhibition-main-title">Exhibitions</h2>    
+        <div class="exhibition-info">
+          <h3 class="exhibition-title">Ethereal Reverie</h3>
+          <p class="exhibition-meta">Zhonghua Ernü Art Museum · 2024</p>
+        </div>
+      </a>
     </section>
-  </main>
+     <!-- 作品轮播位 -->   
+    <section class="featured-slider">
+      <div class="featured-carousel">
+    
+        <a href="works.html#work1" class="featured-slide active">
+          <div class="featured-image" style="background-image:url('img/Hmwork/Work1.webp')"></div>
+              <!-- 大标题 -->
+        <h2 class="featured-main-title">Works</h2>
+          <div class="featured-info">
+            <h3>Ophelia20XX · Series Female devinity</h3>
+            <p>Mixed Media · 2025</p>
+          </div>
+        </a>
+    
+        <a href="works.html#work2" class="featured-slide">
+          <div class="featured-image" style="background-image:url('img/Hmwork/Work2.webp')"></div>
+          <h2 class="featured-main-title">Works</h2>
+          <div class="featured-info">
+            <h3>Ophanim · Series Unknown Organisms</h3>
+            <p>Oil on canvas · 2024</p>
+          </div>
+        </a>
+    
+        <a href="works.html#work3" class="featured-slide">
+          <div class="featured-image" style="background-image:url('img/Hmwork/Work3.webp')"></div>
+          <h2 class="featured-main-title">Works</h2>
+          <div class="featured-info">
+            <h3>Nv Wa· Series Female devinity</h3>
+            <p>Mixed Media · 2025</p>
+          </div>
+        </a>
+    
+      </div>
+    
+    </section>
+
+     
+</main>
 
   <footer class="site-footer">
-    <p>© 2024 Si Wu · Artist portfolio</p>
+    <p>© 2026 Si Wu · Artist Portfolio</p>
   </footer>
 
+  <script src="js/slider.js"></script>
+  <!-- 背景效果 -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.halo.min.js"></script>
   <script>
@@ -83,6 +107,7 @@
           backgroundColor: 0x131a43,
           baseColor: 0x001a59,
           size: 2.5,
+          xOffset: 0.28,
           amplitudeFactor: 2.9
       });
   </script>
