@@ -26,7 +26,20 @@
 
 <main>
   <section class="works-page">
-    <div class="filter-bar" id="filterBar"></div>
+    <div class="filter-bar">
+      <div class="filter-group">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="painting">Painting</button>
+        <button class="filter-btn" data-filter="mixed-media">Mixed Media</button>
+        <button class="filter-btn" data-filter="sculpture">Sculpture</button>
+        <button class="filter-btn" data-filter="video">Video</button>
+      </div>
+      <div class="filter-group">
+        <button class="filter-btn active" data-filter-series="all">All Series</button>
+        <button class="filter-btn" data-filter-series="female divinity">Female Divinity</button>
+        <button class="filter-btn" data-filter-series="quantum refraction">Quantum Refreaction</button>
+      </div>
+    </div>
 
     <div class="worksGrid" id="worksGrid">
       <!-- JS will populate works here -->
