@@ -1,0 +1,38 @@
+[
+  {
+    "id": "work-001",
+    "title": "Ophelia20XX",
+    "year": "2025",
+    "type": "painting",
+    "series": "female divinity",
+    "medium": "Oil on canvas",
+    "size": "80 x 100 cm",
+    "thumbnail": "img/works/work1.webp",
+    "image": "img/works/work1.webp",
+    "description": "A painting exploring the tension between organic life and artificial systems."
+  },
+  {
+    "id": "work-002",
+    "title": "Ophanim",
+    "year": "2024",
+    "type": "mixed-media",
+    "series": "quantum-refraction",
+    "medium": "Acrylic + fabric",
+    "size": "100 x 80 cm",
+    "thumbnail": "img/works/work2thumb.webp",
+    "image": "img/works/work2.webp",
+    "description": "A mixed media exploration of time and space."
+  },
+  {
+    "id": "work-003",
+    "title": "Breakfast",
+    "year": "2024",
+    "type": "painting",
+    "series": "quantum-refraction",
+    "medium": "Acrylic on canvas",
+    "size": "40 x 60 cm",
+    "thumbnail": "img/works/work-003.webp",
+    "image": "img/works/work-003.webp",
+    "description": ""
+  }
+]

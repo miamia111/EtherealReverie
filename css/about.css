@@ -1,67 +1,102 @@
 /* 艺术家介绍页 */
-.page-intro {
-  margin-bottom: 3rem;
-}
+.about-page{
+  max-width:1400px; /* 控制内容宽度 */
+  margin:0 auto;
+  padding:6rem clamp(2rem,5vw,6rem);
+  }
+  
+  .about-grid{
+  
+    display:grid;
+    grid-template-columns:1.1fr 0.9fr;
+    gap:clamp(3rem,6vw,6rem);    
+    align-items:start;
+  
+  }
+  
+  .about-text h1{
+  
+  font-size:clamp(2rem,4vw,3rem);
+  margin-bottom:2rem;
+  
+  }
+  
+  .about-text p{
+  
+  line-height:1.7;
+  margin-bottom:1.4rem;
+  color:var(--text-muted);
+  
+  }
+  
+  .about-text h2{
+  
+  margin-top:3rem;
+  margin-bottom:1rem;
+  font-size:1.4rem;
+  letter-spacing:.08em;
+  
+  }
+  
+  .ex-item{
+  
+  display:flex;
+  gap:1.5rem;
+  margin-bottom:.6rem;
+  
+  }
+  
+  .year{
+  
+  font-weight:600;
+  opacity:.7;
+  min-width:60px;
+  
+  }
+  
+  .ex-title{
+  
+  opacity:.9;
+  
+  }
+  
+  .about-image img{
+  
+  width:100%;
+  height:auto;
+  border-radius:6px;
+  object-fit:cover;
+  
+  }
+  @media (max-width:900px){
 
-.page-title {
-  font-size: clamp(1.8rem, 4vw, 2.2rem);
-  letter-spacing: 0.08em;
-  margin-bottom: 0.5rem;
-}
+    .about-grid{
+    
+    grid-template-columns:1fr;
+    gap:3rem;
+    
+    }
+    
+    .about-image{
+    
+    order:-1;
+    
+    }
+    
+    /*页面动画*/
+    }
+    .reveal{
 
-.page-lead {
-  font-size: 1rem;
-  color: var(--text-muted);
-  font-weight: 300;
-}
-
-.about-content {
-  max-width: 720px;
-}
-
-.about-text {
-  margin-bottom: 2.5rem;
-}
-
-.about-text p {
-  margin-bottom: 1.25rem;
-  color: var(--text);
-}
-
-.about-bio {
-  font-size: 1.1rem;
-  font-weight: 500;
-  color: var(--text);
-}
-
-.about-details h2 {
-  font-size: 1.1rem;
-  letter-spacing: 0.05em;
-  margin: 2rem 0 1rem;
-  color: var(--text-muted);
-  font-family: 'Noto Sans SC', sans-serif;
-  font-weight: 600;
-}
-
-.timeline {
-  list-style: none;
-}
-
-.timeline li {
-  padding: 0.5rem 0;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: baseline;
-  gap: 1rem;
-}
-
-.timeline .year {
-  font-size: 0.9rem;
-  color: var(--accent);
-  min-width: 3rem;
-}
-
-.contact {
-  font-size: 1rem;
-  color: var(--accent);
-}
+      opacity:0;
+      transform:translateY(40px);
+      
+      transition:all 1s ease;
+      
+      }
+      
+      .reveal.active{
+      
+      opacity:1;
+      transform:translateY(0);
+      
+      }
