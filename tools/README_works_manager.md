@@ -10,6 +10,9 @@
 - 在作品详情里编辑文本描述（以及常用字段：标题、年份、类型、系列、媒介、尺寸）
 - 选择图片并将其复制到 `img/works/`（图片路径会写回 `works.json`）
 - 删除作品（可选：同时删除对应图片文件）
+- 编辑多媒体字段：`content.kind/src/poster/link/modelFormat`
+  - 可用于图片、动图、视频、音频、网页链接、3D外链预览
+- 编辑筛选配置：`works-data/filters.json`（可增删顶部筛选字段和选项）
 
 ## 运行前提
 
@@ -44,4 +47,7 @@ python .\tools\works_manager.py
 
 - 打开/刷新 `works.html`
 - 如果你是用浏览器直接打开 `file://`，`fetch` 可能会失败；建议用本地服务器访问（如 VS Code Live Server）。
+- `works.html` 会读取：
+  - `works-data/works.json`（作品数据）
+  - `works-data/filters.json`（筛选按钮配置）
 

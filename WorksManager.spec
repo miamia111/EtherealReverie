@@ -2,7 +2,7 @@
 
 
 a = Analysis(
-    ['tools\\works_manager.py'],
+    ['D:/cursor-test/tools/works_manager.py'],
     pathex=[],
     binaries=[],
     datas=[],

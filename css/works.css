@@ -12,22 +12,217 @@
   gap:1rem;
   margin-bottom:3rem;
   justify-content:flex-start;
+  position: relative;
 }
 
-.filter-btn{
-  border:none;
-  background:rgba(255,0,229,0.2);
-  padding:.6rem 1.2rem;
-  border-radius:20px;
+.filter-group{
+  display: grid;
+  gap: .5rem;
+}
+
+.filter-control{
+  position: relative;
+}
+
+.filter-trigger-btn{
+  box-sizing: border-box;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 9.8rem;
+  height: 2.8rem;
+  overflow: hidden;
+  padding: 0;
   cursor:pointer;
-  font-weight:500;
-  transition:0.3s;
+  border-radius: 5rem;
+  border: double 4px transparent;
+  background-image: linear-gradient(#212121, #212121),
+    linear-gradient(137.48deg, #ffdb3b 10%, #fe53bb 45%, #8f51ea 67%, #0044ff 87%);
+  background-origin: border-box;
+  background-clip: content-box, border-box;
+  background-size: 300% 300%;
+  backdrop-filter: blur(1rem);
+  transition: transform .25s ease, filter .25s ease, box-shadow .25s ease;
+  animation: gradient_301 5s ease infinite;
+  box-shadow: 0 8px 20px rgba(0,0,0,.2);
+  isolation: isolate;
 }
 
-.filter-btn.active,
-.filter-btn:hover{
-  background:rgba(255,0,229,0.5);
+.filter-trigger-btn:hover{
+  transform: scale(1.06);
+}
+
+.filter-trigger-btn:active{
+  border: double 4px #fe53bb;
+  animation: none;
+}
+
+.filter-control.open .filter-trigger-btn{
+  box-shadow: 0 0 0 2px rgba(255,255,255,.18), 0 0 22px rgba(143,81,234,.42);
+}
+
+#container-stars{
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  border-radius: 5rem;
+  transition: .5s;
+  backdrop-filter: blur(1rem);
+  -webkit-backdrop-filter: blur(1rem);
+}
+
+#stars{
+  position: absolute;
+  left: -50%;
+  top: -180%;
+  width: 200rem;
+  height: 200rem;
+  background: transparent;
+}
+
+#stars::before,
+#stars::after{
+  content: "";
+  position: absolute;
+  background-image: radial-gradient(#ffffff 1px, transparent 1%);
+  background-size: 50px 50px;
+}
+
+#stars::before{
+  top: 0;
+  left: 0;
+  width: 170%;
+  height: 500%;
+  opacity: .5;
+  animation: animStar 60s linear infinite;
+}
+
+#stars::after{
+  top: -10rem;
+  left: -100rem;
+  width: 100%;
+  height: 100%;
+  animation: animStarRotate 90s linear infinite;
+}
+
+.btn-label{
+  z-index: 2;
+  font-size: 11px;
+  letter-spacing: 2.4px;
+  color: #fff;
+  text-transform: uppercase;
+  text-shadow: 0 0 4px white;
+  white-space: nowrap;
+}
+
+#glow{
+  position: absolute;
+  display: flex;
+  width: 12rem;
+  z-index: 1;
+}
+
+.filter-trigger-btn .circle{
+  width: 100%;
+  height: 30px;
+  filter: blur(2rem);
+  animation: pulse_3011 4s infinite;
+}
+
+.filter-trigger-btn .circle:nth-of-type(1){
+  background: rgba(254, 83, 186, 0.636);
+}
+
+.filter-trigger-btn .circle:nth-of-type(2){
+  background: rgba(142, 81, 234, 0.704);
+}
+
+.filter-trigger-btn:active .circle{
+  background: #fe53bb;
+}
+
+.filter-trigger-btn:hover #container-stars{
+  z-index: 1;
+  background-color: #212121;
+}
+
+.filter-panel{
+  position: absolute;
+  top: calc(100% + .75rem);
+  left: 0;
+  min-width: min(92vw, 680px);
+  max-width: min(92vw, 680px);
+  padding: 1rem;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 18px;
+  background: rgba(14,14,16,.92);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 14px 36px rgba(0,0,0,.45);
+  z-index: 20;
+  display: none;
+  gap: 1rem;
+}
+
+.filter-panel.active{
+  display: grid;
+}
+
+.filter-group-title{
+  font-size: .8rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  opacity: .78;
+}
+
+.filter-options{
+  display:flex;
+  flex-wrap:wrap;
+  gap:.5rem;
+}
+
+.filter-option-btn{
+  border:1px solid rgba(255,255,255,.16);
+  background: rgba(255,255,255,.06);
   color:#fff;
+  border-radius:999px;
+  padding:.38rem .8rem;
+  font-size:.82rem;
+  cursor:pointer;
+  transition:.2s ease;
+}
+
+.filter-option-btn:hover{
+  background: rgba(255,255,255,.14);
+  transform: translateY(-1px);
+}
+
+.filter-option-btn.active{
+  background: linear-gradient(120deg, rgba(254,83,186,.36), rgba(143,81,234,.4));
+  border-color: rgba(255,255,255,.4);
+}
+
+@keyframes animStar {
+  from { transform: translateY(0); }
+  to { transform: translateY(-135rem); }
+}
+
+@keyframes animStarRotate {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0); }
+}
+
+@keyframes gradient_301 {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes pulse_3011 {
+  0% { transform: scale(0.75); box-shadow: 0 0 0 0 rgba(0,0,0,.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(0,0,0,0); }
+  100% { transform: scale(0.75); box-shadow: 0 0 0 0 rgba(0,0,0,0); }
 }
 
 #worksGrid{
@@ -40,6 +235,7 @@
   .work-card{
   cursor:pointer;
   overflow:hidden;
+  position: relative;
   }
   
   .work-card img{
@@ -48,6 +244,21 @@
   object-fit:cover;
   display:block;
   transition:transform .4s ease;
+  }
+
+  .watermark-layer{
+    position: absolute;
+    inset: 0;
+    background-image: var(--watermark-image);
+    background-repeat: repeat;
+    background-size: 280px 190px;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .card-watermark{
+    opacity: .52;
+    z-index: 2;
   }
   
   .work-card:hover img{
@@ -70,6 +281,7 @@
   align-items:center;
   justify-content:center;
   z-index:999;
+  overflow:hidden;
   }
   
   .works-modal.active{
@@ -79,54 +291,116 @@
     .modal-content {
       display: flex;
       flex-direction: row;
-      max-width: 2000px;
-      width: 90%;
-      height:80%;
+      gap: clamp(1rem, 2.5vw, 2.25rem);
+      max-width: 1800px;
+      width: min(94vw, 1800px);
+      height: min(90vh, 980px);
       margin: auto;
       position: relative;
       color: #fff;
       background: transparent;
   }
   
-  .modal-content img{
-    width:100%;
-    display:block;
-    margin-bottom:1rem;
+  #modal-media{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   /* 左侧文字 */
   .modal-left{
-    flex:2;
-    padding:2rem;
-    margin-right:2rem;
+    flex: 0 0 min(420px, 34vw);
+    padding: clamp(1rem, 2vw, 1.75rem);
     text-align:left;
     overflow-y:auto;
+  }
+  
+  #modal-title{
+    font-size: clamp(1.35rem, 1.4vw, 1.75rem);
+    letter-spacing: 0.2px;
+    margin: 0 0 .4rem 0;
+    line-height: 1.15;
+  }
+
+  #modal-year,
+  #modal-type,
+  #modal-medium,
+  #modal-size{
+    margin: .25rem 0;
+    opacity: .88;
+    line-height: 1.45;
+  }
+
+  #modal-desc{
+    margin-top: 1.2rem;
+    padding-top: 1.1rem;
+    border-top: 1px solid rgba(255,255,255,0.18);
+    opacity: .95;
+    line-height: 1.65;
+    white-space: pre-wrap;
   }
 
   
   /* 右侧图片 */
   .modal-right {
-    flex:6;
+    flex: 1 1 auto;
     display: flex;
     align-items: center;       /* 垂直居中 */
-    justify-content: flex-end; /* 靠右 */
-    padding: 2rem;             /* 上下左右都有间距 */
+    justify-content: center;   /* 居中，更像灯箱展示 */
+    padding: clamp(1rem, 2vw, 1.75rem);
+    position: relative;
                  /* 让 flex 容器占满父高度 */
   }
   
-  .modal-right img {
-    width: 70%;           /* 横向填满右侧容器 */
-    height: auto;          /* 自动比例缩放 */
+  .modal-main-media {
+    width: min(100%, 1100px);
+    max-height: calc(90vh - 80px);
+    height: auto;
     object-fit: contain;       /* 保持比例 */
     border-radius: 4px;
+    will-change: transform, opacity;
+    position: relative;
+    z-index: 1;
+  }
+
+  .modal-iframe{
+    width: min(100%, 1100px);
+    height: min(72vh, 760px);
+    border: none;
+    background: #111;
+  }
+
+  .modal-audio{
+    width: min(100%, 720px);
+  }
+
+  .modal-watermark{
+    inset: clamp(1rem, 2vw, 1.75rem);
+    opacity: .42;
+    z-index: 2;
   }
   /* 关闭按钮 */
 .modal-close {
-  position: relative;
-  top: 0;
-  right: 0; /* 与右侧图片保持一致 */
-  font-size: 2rem;
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: rgba(0,0,0,0.35);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  font-size: 1.8rem;
   cursor: pointer;
   z-index: 1000;
+  transition: transform .18s ease, background .18s ease, opacity .18s ease;
+}
+
+.modal-close:hover{
+  transform: scale(1.06);
+  background: rgba(0,0,0,0.55);
 }
 /* 滚动条控制（如果文字过长） */
 .modal-left::-webkit-scrollbar {

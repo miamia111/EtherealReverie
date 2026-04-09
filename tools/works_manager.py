@@ -4,7 +4,7 @@ import shutil
 import sys
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List, Optional
+from typing import Any, Dict, List, Optional
 from tkinter import (
     BOTH,
     END,
@@ -66,9 +66,15 @@ class Work:
     thumbnail: str = ""
     image: str = ""
     description: str = ""
+    content_kind: str = "image"
+    content_src: str = ""
+    content_poster: str = ""
+    content_link: str = ""
+    content_model_format: str = ""
 
     @staticmethod
     def from_dict(d: dict) -> "Work":
+        content = d.get("content", {}) if isinstance(d.get("content"), dict) else {}
         return Work(
             id=str(d.get("id", "")),
             title=str(d.get("title", "")),
@@ -80,6 +86,11 @@ class Work:
             thumbnail=str(d.get("thumbnail", "")),
             image=str(d.get("image", "")),
             description=str(d.get("description", "")),
+            content_kind=str(content.get("kind", "image") or "image"),
+            content_src=str(content.get("src", d.get("image", ""))),
+            content_poster=str(content.get("poster", d.get("thumbnail", ""))),
+            content_link=str(content.get("link", "")),
+            content_model_format=str(content.get("modelFormat", "")),
         )
 
     def to_dict(self) -> dict:
@@ -94,6 +105,13 @@ class Work:
             "thumbnail": self.thumbnail,
             "image": self.image,
             "description": self.description,
+            "content": {
+                "kind": self.content_kind or "image",
+                "src": self.content_src or self.image,
+                "poster": self.content_poster or self.thumbnail,
+                "link": self.content_link,
+                "modelFormat": self.content_model_format,
+            },
         }
 
 
@@ -105,6 +123,7 @@ class WorksManagerApp(tk.Tk):
 
         self.project_dir = self._resolve_project_dir()
         self.works_json_path = self.project_dir / "works-data" / "works.json"
+        self.filters_json_path = self.project_dir / "works-data" / "filters.json"
         self.works_img_dir = self.project_dir / "img" / "works"
 
         self.works: List[Work] = []
@@ -203,6 +222,11 @@ class WorksManagerApp(tk.Tk):
         self.series_var = tk.StringVar(value="")
         self.medium_var = tk.StringVar(value="")
         self.size_var = tk.StringVar(value="")
+        self.content_kind_var = tk.StringVar(value="image")
+        self.content_src_var = tk.StringVar(value="")
+        self.content_poster_var = tk.StringVar(value="")
+        self.content_link_var = tk.StringVar(value="")
+        self.content_model_format_var = tk.StringVar(value="")
 
         add_entry(1, "标题", self.title_var)
         add_entry(2, "年份", self.year_var)
@@ -210,13 +234,18 @@ class WorksManagerApp(tk.Tk):
         add_entry(4, "系列", self.series_var)
         add_entry(5, "媒介", self.medium_var)
         add_entry(6, "尺寸(可选)", self.size_var)
+        add_entry(7, "内容类型(image/video/audio/web/model)", self.content_kind_var)
+        add_entry(8, "内容源src", self.content_src_var)
+        add_entry(9, "封面poster(可选)", self.content_poster_var)
+        add_entry(10, "网页/3D链接link(可选)", self.content_link_var)
+        add_entry(11, "3D格式(modelFormat, 可选)", self.content_model_format_var)
 
         # Description
         ttk.Label(editor, text="文本描述").grid(
-            row=7, column=0, sticky=W, padx=(0, 10), pady=(12, 0)
+            row=12, column=0, sticky=W, padx=(0, 10), pady=(12, 0)
         )
         self.desc_text = tk.Text(editor, height=10, wrap="word")
-        self.desc_text.grid(row=7, column=1, columnspan=4, sticky="nsew", pady=(12, 0))
+        self.desc_text.grid(row=12, column=1, columnspan=4, sticky="nsew", pady=(12, 0))
 
         # Buttons
         action = ttk.Frame(right)
@@ -230,11 +259,14 @@ class WorksManagerApp(tk.Tk):
         ttk.Button(action, text="打开works.html提示刷新", command=self._on_hint).pack(
             side=LEFT, padx=6
         )
+        ttk.Button(action, text="编辑筛选字段(filters.json)", command=self._on_edit_filters).pack(
+            side=LEFT, padx=6
+        )
 
         # Make columns expand
         for c in range(1, 5):
             editor.grid_columnconfigure(c, weight=1)
-        editor.grid_rowconfigure(7, weight=1)
+        editor.grid_rowconfigure(12, weight=1)
 
     def _load_works(self):
         raw = _read_json(self.works_json_path, default=[])
@@ -263,6 +295,11 @@ class WorksManagerApp(tk.Tk):
         self.series_var.set("")
         self.medium_var.set("")
         self.size_var.set("")
+        self.content_kind_var.set("image")
+        self.content_src_var.set("")
+        self.content_poster_var.set("")
+        self.content_link_var.set("")
+        self.content_model_format_var.set("")
         self.desc_text.delete("1.0", END)
 
     def _on_select(self, _evt):
@@ -282,6 +319,11 @@ class WorksManagerApp(tk.Tk):
         self.series_var.set(w.series)
         self.medium_var.set(w.medium)
         self.size_var.set(w.size)
+        self.content_kind_var.set(w.content_kind or "image")
+        self.content_src_var.set(w.content_src)
+        self.content_poster_var.set(w.content_poster)
+        self.content_link_var.set(w.content_link)
+        self.content_model_format_var.set(w.content_model_format)
         self.desc_text.delete("1.0", END)
         self.desc_text.insert("1.0", w.description)
 
@@ -335,6 +377,10 @@ class WorksManagerApp(tk.Tk):
         rel = _to_posix_rel(self.project_dir, dest_abs)
         work.image = rel
         work.thumbnail = rel
+        if not work.content_src:
+            work.content_src = rel
+        if not work.content_poster:
+            work.content_poster = rel
 
     def _on_pick_image(self):
         if self.current_index is None:
@@ -356,6 +402,8 @@ class WorksManagerApp(tk.Tk):
         try:
             self._maybe_copy_image(w, chosen)
             self.image_var.set(w.image)
+            self.content_src_var.set(w.content_src)
+            self.content_poster_var.set(w.content_poster)
         except Exception as e:
             messagebox.showerror("错误", f"复制图片失败：{e}")
 
@@ -372,6 +420,18 @@ class WorksManagerApp(tk.Tk):
         w.medium = self.medium_var.get().strip()
         w.size = self.size_var.get().strip()
         w.description = self.desc_text.get("1.0", END).strip()
+        w.content_kind = self.content_kind_var.get().strip().lower() or "image"
+        w.content_src = self.content_src_var.get().strip()
+        w.content_poster = self.content_poster_var.get().strip()
+        w.content_link = self.content_link_var.get().strip()
+        w.content_model_format = self.content_model_format_var.get().strip().lower()
+
+        if w.content_kind in {"video", "audio", "image"} and not (w.content_src or w.image):
+            messagebox.showwarning("提示", "当前内容类型需要 src（内容源）。")
+            return
+        if w.content_kind in {"web", "model"} and not (w.content_link or w.content_src):
+            messagebox.showwarning("提示", "web/model 至少需要 link 或 src。")
+            return
 
         if not w.image:
             # Keep silent? Better to warn to avoid empty modal image.
@@ -422,6 +482,52 @@ class WorksManagerApp(tk.Tk):
             messagebox.showinfo("成功", "已删除并更新 works.json。")
         except Exception as e:
             messagebox.showerror("错误", f"删除失败：{e}")
+
+    def _default_filters(self) -> Dict[str, Any]:
+        return {
+            "groups": [
+                {"key": "type", "label": "Type", "options": ["painting", "mixed-media", "video", "audio", "model", "web"]},
+                {"key": "series", "label": "Series", "options": []},
+            ]
+        }
+
+    def _on_edit_filters(self):
+        win = tk.Toplevel(self)
+        win.title("编辑筛选字段（works-data/filters.json）")
+        win.geometry("760x520")
+
+        text = tk.Text(win, wrap="none")
+        text.pack(fill=BOTH, expand=True, padx=12, pady=(12, 6))
+
+        current = _read_json(self.filters_json_path, self._default_filters())
+        text.insert("1.0", json.dumps(current, ensure_ascii=False, indent=2))
+
+        btns = ttk.Frame(win)
+        btns.pack(fill="x", padx=12, pady=(0, 12))
+
+        def on_save_filters():
+            raw = text.get("1.0", END).strip()
+            try:
+                parsed = json.loads(raw)
+                groups = parsed.get("groups", []) if isinstance(parsed, dict) else []
+                if not isinstance(groups, list):
+                    raise ValueError("groups 必须是数组")
+                _write_json(self.filters_json_path, parsed)
+                messagebox.showinfo("成功", "筛选配置已保存。刷新 works.html 即可生效。")
+                win.destroy()
+            except Exception as e:
+                messagebox.showerror("错误", f"filters.json 格式不正确：{e}")
+
+        def on_format_json():
+            try:
+                parsed = json.loads(text.get("1.0", END).strip())
+                text.delete("1.0", END)
+                text.insert("1.0", json.dumps(parsed, ensure_ascii=False, indent=2))
+            except Exception as e:
+                messagebox.showerror("错误", f"无法格式化：{e}")
+
+        ttk.Button(btns, text="格式化JSON", command=on_format_json).pack(side=LEFT, padx=4)
+        ttk.Button(btns, text="保存配置", command=on_save_filters).pack(side=LEFT, padx=4)
 
     def _on_hint(self):
         messagebox.showinfo(
