@@ -1,4 +1,3 @@
-
 /* 动态背景 */
 #vanta-halo {
   position: fixed;
@@ -19,26 +18,29 @@ main,
 }
 
 /* 主内容区 */
-.home main {
+/* 修改原有的 .home main 为主容器逻辑 */
+.main-container {
+  display: flex; /* 使用 flex 方便处理 7:3 比例 */
   max-width: 100%;
   margin: 0 auto;
   padding: 3rem clamp(2rem, 6vw, 8rem) 1rem;
-  background: rgba(23, 14, 51, 0);
-  border-radius: 32px;
+  gap: 60px; /* 左右两栏的间距 */
+  align-items: start;
 }
 
-/* 主页样式 */
-.hero {
-  height: 50vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start; /* 防止按钮被拉宽 */
-  padding-top: clamp(2rem, 4vw, 3rem);  /* 控制往上移动 */
-  padding-bottom: 9rem;
-  max-width: 720px;   /* 控制文字宽度 */
+/* 左侧内容区：限制宽度并保持响应式 */
+.content-left {
+  flex: 7; /* 占据 70% */
+  min-width: 0; /* 防止内容撑破 flex 容器 */
 }
-  
+
+/* 重新微调 Hero，因为现在它只在 70% 的宽度里 */
+.hero {
+  height: auto; /* 改为自适应高度 */
+  min-height: 40vh;
+  padding-bottom: 5rem; /* 减少底部 padding，让下方作品更紧凑 */
+  max-width: 100%;
+}
 
 .hero-desc {
   font-size: 1.05rem;
@@ -79,181 +81,195 @@ main,
   letter-spacing: 2px;
 }
 
-.featured-slider{
-  margin-top:5rem;
-  }
-  
-  .featured-carousel{
-  position:relative;
-  height:60vh;
-  overflow:hidden;
-  border-radius:16px;
-  }
-  
-  /* slide */
-  
-  .featured-slide{
-  position:absolute;
-  inset:0;
-  opacity:0;
-  transition:opacity 1s ease;
-  }
-  
-  .featured-slide.active{
-  opacity:1;
-  z-index:2;
-  }
-  
-  /* 图片 */
-  
-  .featured-image{
-  width:100%;
-  height:100%;
-  background-size:cover;
-  background-position:center;
-  filter:grayscale(50%);
-  transition:filter .8s ease, transform .8s ease;
-  }
-  
-  .featured-slide:hover .featured-image{
-  filter:grayscale(0%);
-  transform:scale(1.05);
-  }
-  
-  /* 大标题 */
-  
-  .featured-main-title{
-  
-  position:absolute;
-  top:50%;
-  left:50%;
-  
-  transform:translate(-50%,-50%);
-  
-  font-size:clamp(3rem,7vw,6rem);
-  
-  letter-spacing:.15em;
-  text-transform:uppercase;
-  
-  color:white;
-  
-
-  z-index:3;   /* 保证在图片上 */
-
-pointer-events:none; /* 不影响点击 */
-
-opacity:0.9;
-}
-  
-  
-  
-  /* 作品信息 */
-  
-  .featured-info{
-  
-  position:absolute;
-  bottom:40px;
-  left:40px;
-  
-  opacity:0;
-  transform:translateY(20px);
-  
-  transition:all .4s ease;
-  
-  color:white;
-  }
-  
-  .featured-slide:hover .featured-info{
-  opacity:1;
-  transform:translateY(0);
-  }
-  
-  .featured-info h3{
-  font-size:clamp(1.6rem,2vw,2rem);
-  }
-  
-  .featured-info p{
-  opacity:.8;
-  }
-
-.featured-cta {
-  text-align: center;
-  margin-top: 2.5rem; /* 调整按钮下移 */
+/* 展览和作品网格 */
+.main-visual-grid {
+  display: grid;
+  margin-top: 2rem;
+  grid-template-columns: 1fr 1fr; /* 展览等宽作品网格 */
+  gap: 30px;
+  align-items: stretch; /* 两列等高，便于右侧 WORKS 区 height:100% */
 }
 
-
-/* Exhibition Section */
-.exhibition {
-  margin-top: 4rem; /* 和上一部分间距 */
+.grid-item:nth-child(even) {
+  transform: none !important;
+  margin-top: 0 !important;
 }
 
-.exhibition-card {
-  display: block;
+/* 文字标签样式 */
+.section-label {
+  font-size: 1.2rem;
+  letter-spacing: 0.3em;
+  margin-bottom: 1.5rem;
+  color: var(--text-muted);
+}
+
+/* 展览精选位 */
+.exhibition-featured {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.exhibition-image-wrapper {
+  flex:1 1 auto; /*自动撑开*/
   position: relative;
   overflow: hidden;
-  width: 100%;
-  height: 60vh; /* 填满屏幕高度，可根据需要调整 */
-  border-radius: 16px;
-  cursor: pointer;
-  transition: transform 0.3s ease;
+  border-radius: 8px;
 }
 
-.exhibition-card:hover {
-  transform: scale(1.02); /* hover 放大效果 */
-}
-
-.exhibition-image {
+/* 4. 图片统一比例 (让效果图看起来整齐) */
+.exhibition-image-wrapper img {
+  
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  background-size: cover;
-  background-position: center;
-  filter: grayscale(50%); /* 默认灰度可调 */
-  transition: filter 0.8s ease, transform 0.5s ease;
+  object-fit: cover; /* 自动裁切以填满空间 */
 }
 
-.exhibition-card:hover .exhibition-image {
-  filter: grayscale(0); /* hover时彩色 */
-  transform: scale(1.05);
+.exhibition-image-wrapper:hover img {
+  transform: scale(1.03);
 }
 
-/* 大标题 */
-.exhibition-main-title {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: clamp(3rem, 8vw, 6rem); /* 自适应大屏/小屏 */
-  color: rgba(255, 255, 255, 0.8);
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  pointer-events: none; /* 避免影响点击 */
-  z-index: 2;
+/*作品部分*/
+
+.works-dynamic {
+  width: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+/* 确保标题行并排且对齐 */
+.works-header-row {
+  display: flex;
+  justify-content: space-between; /* 左右两头撑开 */
+  align-items: baseline;          /* 确保文字底部对齐 */
+  margin-bottom: 1.5rem;          /* 保持与下方图片的间距 */
 }
 
-/* 展览信息浮现 */
-.exhibition-info {
-  position: absolute;
-  bottom: 20px;
-  left: 20px;
-  color: #fff;
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.5s ease, transform 0.5s ease;
+/* 统一 Section Label 的样式，防止 Flex 破坏它 */
+.works-header-row .section-label {
+  margin-bottom: 0;               /* 移除之前的下边距，由父容器控制 */
 }
 
-.exhibition-card:hover .exhibition-info {
-  opacity: 1;
-  transform: translateY(0);
+/* See More 按键的高级感微调 */
+.see-more-link {
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  color: rgba(255, 255, 255, 0.5); /* 默认半透明，显得精致 */
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-weight: 300;
 }
 
-.exhibition-title {
-  font-size: clamp(1.5rem, 3vw, 2.5rem);
-  margin: 0;
+.see-more-link:hover {
+  color: #fff;                     /* 悬停亮起 */
+  transform: translateX(5px);      /* 增加轻微位移效果 */
+}
+/* 作品网格 */
+#works-container {
+  box-sizing: content-box;
+  flex: 1;
+  min-height: 200px; /* 给容器一个保底高度 */
+  grid-template-columns: 7fr 4fr; /* 左侧 60%，右侧 40%，间距 15px */
+  width: 100%;
+  gap: 15px;
+  display: grid;
 }
 
-.exhibition-meta {
-  font-size: clamp(1rem, 2vw, 1.2rem);
-  margin: 0.3rem 0 0 0;
+.grid-item {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.grid-item > a {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+
+/* 确保图片不会撑破容器 */
+.grid-item img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  min-height: 0; /* 配合 flex 子项，避免撑开网格行 */
+  object-fit: cover;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.1); /* 没图时也能看到个灰框 */
+}
+
+.grid-item:hover img {
+  filter: brightness(1.1);
 }
 
 
+
+/* 3. 移除之前的位移代码（确保对齐） */
+.grid-item:nth-child(even) {
+  transform: none !important;
+  margin-top: 0 !important;
+}
+
+/* 新闻侧边栏 */
+.news-sidebar {
+  flex: 3; /* 占据 30% */
+  position: sticky;
+  top: 120px; /* 避开导航栏 */
+}
+
+.news-sticky-content {
+  background: rgba(255, 255, 255, 0.03); /* 极淡的底色 */
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  padding: 2rem;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.news-header {
+  font-size: 1.2rem;
+  letter-spacing: 0.1em;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 0.5rem;
+}
+
+.news-item {
+  margin-bottom: 2rem;
+}
+
+.news-date {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.news-item.featured img {
+  width: 100%;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.news-item.text-only {
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+@media (max-width: 1024px) {
+  .main-container {
+      flex-direction: column;
+      gap: 4rem;
+  }
+  
+  .news-sidebar {
+      position: static; /* 手机端取消固定 */
+      width: 100%;
+  }
+  
+  .grid-item:nth-child(even) {
+      transform: translateY(0); /* 手机端取消错位，方便阅读 */
+  }
+}
