@@ -1,0 +1,20 @@
+{
+    "featured_exhibition": {
+      "id": "ethereal-reverie-2024",
+      "title": "Ethereal Reverie",
+      "location": "Zhonghua Ernü Art Museum",
+      "year": "2024",
+      "image": "img/Hmwork/Ex1.webp"
+    },
+    "latest_news": [
+      {
+        "type": "featured",
+        "title": "Studio Visit: 'The Red Thread'",
+        "date": "AUG 12",
+        "img": "img/news/studio.webp",
+        "desc": "A deep dive into the creative process..."
+      },
+      { "type": "text", "title": "Upcoming: Shanghai Art Fair", "date": "10.25" },
+      { "type": "text", "title": "New Series: Female Divinity", "date": "11.02" }
+    ]
+  }
