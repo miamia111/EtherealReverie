@@ -7,9 +7,7 @@
   height: 100%;
   z-index: -1;
 }
-
 /* 页面内容在背景上 */
-
 .site-header,
 main,
 .site-footer{
@@ -25,7 +23,7 @@ main,
   margin: 0 auto;
   padding: 3rem 0 1rem 4rem;
   gap: 40px; /* 左右两栏的间距 */
-  align-items: start;
+  align-items: stretch; /* 让左右列等高，便于底部对齐 */
   overflow-x: hidden; /* 防止内容微量溢出 */
 }
 
@@ -84,9 +82,7 @@ main,
   width: 100%;
   height: 100%;
   object-fit: cover;
-  
-  /* 尝试以下几种模式，哪种最自然用哪种 */
-  mix-blend-mode: screen;  /* 滤除黑色，保留亮部（适合暗背景） */
+  mix-blend-mode: overlay;  /* 滤除黑色，保留亮部（适合暗背景） */
   /* mix-blend-mode: overlay; */ /* 叠加模式，增加对比度 */
   
   filter: contrast(1.2) brightness(0.8); /* 调整视频参数使其更贴合背景 */
@@ -263,21 +259,40 @@ main,
   aspect-ratio: 3 / 8;  /* 锁定竖图比例 */
 }
 
-/* 新闻侧边栏 */
+/* 1. 侧边栏容器：必须是 relative，作为定位基准 */
 .news-sidebar {
-  flex: 3; /* 占据 30% */
   position: sticky;
-  top: 0px; /* 避开导航栏 */
+  top: 0px;
+  min-height: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
 }
 
+/* 2. 新闻区：展开时会向下覆盖 */
 .news-sticky-content {
-  background: rgba(255, 255, 255, 0.03); /* 极淡的底色 */
+  background: rgba(20, 15, 35, 0.85); /* 稍微调高不透明度，确保盖住下方时不乱 */
   backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(15px);
   padding: 2rem;
-  border-radius: 16px 0 0 16px;
+  border-radius: 16px;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-right: none; /* 去掉右边框，视觉上更贴合边缘 */
+  
+  position: relative;
+  z-index: 10; /* 确保层级在 Socials 之上 */
+  
+  max-height: 300px; /* 初始对齐高度 */
+  overflow: hidden;
+  transition: max-height 0.5s ease;
+  /* 渐变遮罩：折叠时有消失感 */
+  mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+}
+
+.news-sticky-content:hover {
+  max-height: 650px; /* 展开高度：现在它会向下盖住 Socials */
+  mask-image: none;
+  -webkit-mask-image: none;
+  overflow-y: auto;
 }
 
 .news-header {
@@ -327,10 +342,13 @@ main,
 
 /* 外层包装，控制在侧边栏的位置 */
 .social-card-wrapper {
-  margin-top: 3rem;
-  width: 100%; /* 宽度占满侧边栏 */
+  position: relative;
+  margin-top: auto; /* 固定在侧边栏底部，不受 News Feed 折叠影响 */
+  width: 100%;
   display: flex;
-  justify-content: center; /* 居中显示 */
+  justify-content: center;
+  padding-bottom: 0px; /* 与左侧对齐的最终微调 */
+  z-index: 5; /* 层级较低，被 News 覆盖 */
 }
 /* 容器保持自适应 */
 .card {
@@ -353,25 +371,24 @@ main,
 }
 
 /* 修正文字：字体、间距与右上角滑行 */
-.logo {
+.sitelogo {
   position: absolute;
+  /* 初始居中 */
   right: 50%;
   bottom: 50%;
-  transform: translate(50%, 50%);
-  transition: all 0.6s ease-in-out;
-  font-family: inherit; /* 继承你网站的字体 */
-  font-size: 1.2rem;
-  font-weight: 600;
   color: #ffffff;
-  letter-spacing: 3px;
-  z-index: 10; /* 确保在背景之上 */
+  transform: translate(50%, 50%); 
+  transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+  white-space: nowrap;
 }
 
 /* 悬停时：文字滑向右上角，且不被遮挡 */
-.card:hover .logo {
-  transform: translate(170%, -200%); /* 向右上方滑行 */
-  letter-spacing: 0px;
-  opacity: 0.8;
+.card:hover .sitelogo {
+  right: 20px;  /* 距离右边 15 像素 */
+  bottom: calc(100% - 40px); /* 距离顶部 30 像素 */
+  transform: translate(0, 0); /* 归零 translate 的偏移 */
+  font-size: 1rem;
+  opacity: 1;
 }
 
 /* 基础 Box 样式：恢复那个奇特的圆角 */

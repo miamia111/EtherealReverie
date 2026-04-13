@@ -59,19 +59,19 @@ main {
   left: 0;
   right: 0;
   z-index: 100;
-  padding: 0.8rem clamp(1rem,3vw,2rem);
+  padding: 1.5rem 3rem;
   background: rgba(11, 5, 29, 0.363);
   backdrop-filter: blur(10px);
   transition: padding 0.3s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* 6. 靠左对齐 */
 }
 
 .site-header-inner {
-  max-width: 100%;
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap; /* 小屏换行 */
+  display: flex; 
+  gap: 3rem; 
+  width: 100%;
 }
 
 .logo {
@@ -79,33 +79,98 @@ main {
   font-size: clamp(1.2rem, 2.5vw, 2rem); /* 自动缩放 */
   font-weight: 600;
   letter-spacing: 0.05em;
+  position: fixed;
+  top: 0.5rem;   /* 与左侧菜单顶端对齐 */
+  right: 2rem; /* 距离右边缘的距离，建议与 News Feed 的间距一致 */
+  z-index: 101;
+  pointer-events: auto;
+  /* 2. 闪光特效核心：渐变背景 */
+  background: linear-gradient(to right, #b3b1b1 0, #fff 10%, #b3b1b1 20%);
+  background-position: 0;
+  background-size: 200px; /* 控制光束的宽度 */
+  
+  /* 3. 背景裁剪到文字 */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  
+  /* 4. 动画：无限循环 */
+  animation: shine 3s infinite linear;
 }
 
-.logo a {
-  color: var(--text);
+/* 动画定义：让背景从左滑向右 */
+@keyframes shine {
+  0% {
+    background-position: -100px; /* 从左侧不可见处开始 */
+  }
+  60% {
+    background-position: 200px;  /* 滑过文字 */
+  }
+  100% {
+    background-position: 200px;  /* 停顿感，之后回到 0% 循环 */
+  }
 }
-
-.logo a:hover {
-  color: var(--accent);
+/* 兼容性前缀 */
+@-webkit-keyframes shine {
+  0% { background-position: -100px; }
+  60% { background-position: 200px; }
+  100% { background-position: 200px; }
 }
 
 .nav-links {
   display: flex;
-  gap: clamp(1rem, 2vw, 2.5rem); /* 间距随屏幕自适应 */
+  flex-direction: row; /* 确保横向排列 */
+  gap: 2.5rem;            /* 增加间距，让侧边栏不拥挤 */
   list-style: none;
-  flex-wrap: wrap; /* 小屏自动换行 */
+  padding: 0;
 }
 
 .nav-links a {
-  font-size: clamp(0.8rem, 1.5vw, 1rem); /* 自动缩放 */
-  font-weight: 500;
-  letter-spacing: 0.03em;
+  /* 1. 字体大小优化：提升了最小和最大字号 */
+  font-size: clamp(1rem, 1.2vw, 1.2rem); 
+  font-weight: 300;       /* 调细一点字重，配合大字号更有高级感 */
+  letter-spacing: 0.15em; /* 增加字间距，更具画廊感 */
+  text-transform: uppercase;
   color: var(--text-muted);
+  text-decoration: none;
+  position: relative;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  display: inline-block;
+  padding-left: 0;
 }
 
-.nav-links a:hover,
+/* 3. Hover 效果优化：文字右移 + 颜色点亮 */
+.nav-links a:hover {
+  color: #fff;
+  padding-left: 15px; /* 悬停时文字向右滑动一点 */
+}
+
+/* 4. Active 状态：添加一个极简的左侧垂直线条 */
+.nav-links a.active::before,
+.nav-links a:hover::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2px;
+  height: 0; /* 初始高度为 0 */
+  background-color: var(--accent);
+  transition: height 0.3s ease;
+}
+
+.nav-links a.active::before {
+  height: 70%; /* Active 状态线条常驻 */
+}
+
+.nav-links a:hover::before {
+  height: 70%; /* Hover 时线条长出来 */
+}
+
+/* 5. 激活状态文字颜色 */
 .nav-links a.active {
-  color: var(--text);
+  color: #fff;
+  font-weight: 500;
+  padding-left: 15px;
 }
 
 
