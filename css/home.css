@@ -23,53 +23,80 @@ main,
   display: flex; /* 使用 flex 方便处理 7:3 比例 */
   max-width: 100%;
   margin: 0 auto;
-  padding: 3rem clamp(2rem, 6vw, 8rem) 1rem;
-  gap: 60px; /* 左右两栏的间距 */
+  padding: 3rem 0 1rem 4rem;
+  gap: 40px; /* 左右两栏的间距 */
   align-items: start;
+  overflow-x: hidden; /* 防止内容微量溢出 */
 }
 
 /* 左侧内容区：限制宽度并保持响应式 */
 .content-left {
-  flex: 7; /* 占据 70% */
+  flex: 7.5; /* 占据 70% */
   min-width: 0; /* 防止内容撑破 flex 容器 */
 }
 
 /* 重新微调 Hero，因为现在它只在 70% 的宽度里 */
 .hero {
-  height: auto; /* 改为自适应高度 */
-  min-height: 40vh;
-  padding-bottom: 5rem; /* 减少底部 padding，让下方作品更紧凑 */
-  max-width: 100%;
+  position: relative;
+    overflow: hidden; /* 防止视频溢出 */
+    min-height: 40vh;
+    padding-bottom: 5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
-.hero-desc {
-  font-size: 1.05rem;
-  max-width: 520px;
-  margin-bottom: 2rem;
-  color: var(--text-muted);
-  font-weight: 300;
+.hero-link-layer {
+  display: block;    /* 必须设为 block 或 flex */
+  width: 100%;
+  height: 100%;      /* 撑满父容器 */
+  min-height: 40vh;  /* 再次确保高度 */
+  position: relative;
+  z-index: 10;       /* 确保它是最顶层，可被点击 */
+  cursor: pointer;   /* 鼠标移上去变小手 */
 }
 
-.hero .btn {
-  margin-top: 0.8rem;
-  padding: 0.6rem 1.4rem;
-  background: rgba(255, 0, 229, 0.36);
-  color: var(--accent) !important;
-  border-radius: 20px;
-  display: inline-block;
+/* 2. 视频图层样式 */
+.hero-video-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 1; /* 根据素材调整 */
+
+  /* 核心代码：四边向中心渐变显示 */
+  mask-image: radial-gradient(
+      circle at center, 
+      black 40%, 
+      transparent 85%
+  );
+  -webkit-mask-image: radial-gradient(
+      circle at center, 
+      black 40%, 
+      transparent 85%
+  );
 }
 
-.hero-title {
-  font-size: clamp(3rem, 6vw, 5rem);
-  letter-spacing: 0.02em;
+.hero-video-overlay video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  
+  /* 尝试以下几种模式，哪种最自然用哪种 */
+  mix-blend-mode: screen;  /* 滤除黑色，保留亮部（适合暗背景） */
+  /* mix-blend-mode: overlay; */ /* 叠加模式，增加对比度 */
+  
+  filter: contrast(1.2) brightness(0.8); /* 调整视频参数使其更贴合背景 */
 }
 
-.hero-subtitle {
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
+/* 3. 确保文字内容在视频上方 */
+.hero-content {
+  position: relative;
+  z-index: 5; /* 确保内容层级最高 */
 }
-
-
 .featured {
   margin-top: 1rem;
   margin-bottom: 4rem;
@@ -100,7 +127,7 @@ main,
   font-size: 1.2rem;
   letter-spacing: 0.3em;
   margin-bottom: 1.5rem;
-  color: var(--text-muted);
+  color:rgb(189, 196, 200);
 }
 
 /* 展览精选位 */
@@ -155,7 +182,7 @@ main,
 
 /* See More 按键的高级感微调 */
 .see-more-link {
-  font-size: 0.75rem;
+  font-size: 1rem;
   letter-spacing: 0.15em;
   color: rgba(255, 255, 255, 0.5); /* 默认半透明，显得精致 */
   text-decoration: none;
@@ -164,30 +191,35 @@ main,
 }
 
 .see-more-link:hover {
-  color: #fff;                     /* 悬停亮起 */
-  transform: translateX(5px);      /* 增加轻微位移效果 */
+  color: #fff !important;
+  transform: translateX(5px);
+  transition: all 0.3s ease;
 }
 /* 作品网格 */
 #works-container {
   box-sizing: content-box;
-  flex: 1;
-  min-height: 200px; /* 给容器一个保底高度 */
-  grid-template-columns: 7fr 4fr; /* 左侧 60%，右侧 40%，间距 15px */
+  aspect-ratio: 16 / 10;/* 设置一个总高度，或者让它根据宽度自适应 */
+  grid-template-columns: 1.8fr 1fr; /* 调宽右侧：左侧约64%，右侧约36% */
+  grid-template-rows: 1fr 1fr; /* 高度定义：两行各占 50%，或者根据需要设置固定总高 */
   width: 100%;
+  align-items: stretch;     /* 确保所有子元素拉伸填满 */
   gap: 15px;
   display: grid;
 }
 
 .grid-item {
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
+  position: relative;
+  overflow: hidden; /* 确保图片切换时不会撑开容器 */
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.05); /* 图片未加载时的占位底色 */
+  border-radius: 8px;
 }
 
 .grid-item > a {
-  flex: 1;
-  display: flex;
-  min-height: 0;
+  display: block; /* 改为 block */
+  width: 100%;
+  height: 100%;
 }
 
 /* 确保图片不会撑破容器 */
@@ -195,29 +227,47 @@ main,
   width: 100%;
   height: 100%;
   display: block;
-  min-height: 0; /* 配合 flex 子项，避免撑开网格行 */
-  object-fit: cover;
+  object-fit: cover;/* 核心：无论图片比例如何，都填满格子并自动裁剪 */
   border-radius: 8px;
   background: rgba(255,255,255,0.1); /* 没图时也能看到个灰框 */
+  transition: opacity 2s cubic-bezier(0.4, 0, 0.2, 1),transform 0.6s ease;  /* 为随机切换添加渐变效果 */
 }
+
+/* 初始加载或切换时的状态 */
+.grid-item img.fading {
+  opacity: 0;
+}
+/* 左侧：第 1 张和第 3 张图 */
+.grid-item:nth-child(1) { grid-area: 1 / 1 / 2 / 2; }
+.grid-item:nth-child(3) { grid-area: 2 / 1 / 3 / 2; }
+
+/* 右侧：第 2 张图，跨越两行高度 (1/2 到 3/3) */
+.grid-item:nth-child(2) { 
+  grid-area: 1 / 2 / 3 / 3; 
+}
+
+/* 如果有第 4 张图，先隐藏它以免弄乱布局 */
+.grid-item:nth-child(4) { display: none; }
 
 .grid-item:hover img {
-  filter: brightness(1.1);
+  transform: scale(1.03);
 }
 
+/* 左侧横图组 */
+.grid-item:nth-child(odd) {
+  aspect-ratio: 16 / 7; /* 锁定横图比例 */
+}
 
-
-/* 3. 移除之前的位移代码（确保对齐） */
+/* 右侧竖图组 */
 .grid-item:nth-child(even) {
-  transform: none !important;
-  margin-top: 0 !important;
+  aspect-ratio: 3 / 8;  /* 锁定竖图比例 */
 }
 
 /* 新闻侧边栏 */
 .news-sidebar {
   flex: 3; /* 占据 30% */
   position: sticky;
-  top: 120px; /* 避开导航栏 */
+  top: 0px; /* 避开导航栏 */
 }
 
 .news-sticky-content {
@@ -225,8 +275,9 @@ main,
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
   padding: 2rem;
-  border-radius: 16px;
+  border-radius: 16px 0 0 16px;
   border: 1px solid rgba(255, 255, 255, 0.08);
+  border-right: none; /* 去掉右边框，视觉上更贴合边缘 */
 }
 
 .news-header {
@@ -272,4 +323,135 @@ main,
   .grid-item:nth-child(even) {
       transform: translateY(0); /* 手机端取消错位，方便阅读 */
   }
+}
+
+/* 外层包装，控制在侧边栏的位置 */
+.social-card-wrapper {
+  margin-top: 3rem;
+  width: 100%; /* 宽度占满侧边栏 */
+  display: flex;
+  justify-content: center; /* 居中显示 */
+}
+/* 容器保持自适应 */
+.card {
+  position: relative;
+  width: 85%; 
+  aspect-ratio: 1 / 1; 
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 30px;
+  overflow: hidden;
+  transition: all 1s ease-in-out;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  margin: 0 auto;
+}
+/* 渐变背景 - 建议使用你网站的主色调 */
+.background {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%);
+  opacity: 0.8;
+}
+
+/* 修正文字：字体、间距与右上角滑行 */
+.logo {
+  position: absolute;
+  right: 50%;
+  bottom: 50%;
+  transform: translate(50%, 50%);
+  transition: all 0.6s ease-in-out;
+  font-family: inherit; /* 继承你网站的字体 */
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: 3px;
+  z-index: 10; /* 确保在背景之上 */
+}
+
+/* 悬停时：文字滑向右上角，且不被遮挡 */
+.card:hover .logo {
+  transform: translate(170%, -200%); /* 向右上方滑行 */
+  letter-spacing: 0px;
+  opacity: 0.8;
+}
+
+/* 基础 Box 样式：恢复那个奇特的圆角 */
+.box {
+  position: absolute;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.2); /* 默认半透明 */
+  backdrop-filter: blur(5px);
+  border-top: 2px solid rgb(255, 255, 255);
+  border-right: 1px solid white;
+  /* 灵魂圆角：必须保持这个复杂的比例 */
+  border-radius: 10% 13% 42% 0% / 10% 12% 75% 0%;
+  box-shadow: rgba(100, 100, 111, 0.3) -7px 7px 29px 0px;
+  transform-origin: bottom left;
+  transition: all 1s ease-in-out;
+  display: block;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 恢复变色效果：使用伪元素渲染渐变 */
+.box::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  opacity: 0;
+  transition: all 0.5s ease-in-out;
+  z-index: -1;
+}
+/* 2. 精确控制图标位置 */
+.box .icon {
+  position: absolute;
+  /* 将图标推向右上角 */
+  top: 15%; 
+  right: 15%;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  transition: all 0.5s ease-in-out;
+}
+
+/* 3. 针对不同大小的盒子进行微调 (可选) */
+/* 因为 box3 比较小，可以稍微减少偏移防止图标飞出去 */
+.box3 .icon {
+  top: 10%;
+  right: 10%;
+}
+/* 悬停时变色 */
+.box:hover::before {
+  opacity: 1;
+}
+
+/* 三个 Box 的独立渐变色 */
+.box1::before { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #ff53d4 60%, #62c2fe 90%); }
+.box2::before { background: radial-gradient(circle at 30% 107%, #91e9ff 0%, #00ACEE 90%); }
+.box3::before { background: radial-gradient(circle at 30% 107%, #969fff 0%, #b349ff 90%); }
+
+/* 盒子尺寸与位置 */
+.box1 { width: 70%; height: 70%; bottom: -70%; left: -70%; }
+.box2 { width: 50%; height: 50%; bottom: -50%; left: -50%; transition-delay: 0.2s; }
+.box3 { width: 30%; height: 30%; bottom: -30%; left: -30%; transition-delay: 0.4s; }
+
+/* 悬停触发 */
+.card:hover .box {
+  bottom: -1px;
+  left: -1px;
+}
+
+/* 图标颜色 */
+.icon .svg {
+  fill: rgba(255, 255, 255, 0.8);
+  width: 24px;
+  height: 24px;
+  transition: all 0.5s ease-in-out;
+}
+.box:hover .svg {
+  fill: white;
+  filter: drop-shadow(0 0 5px white);
 }

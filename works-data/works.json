@@ -74,5 +74,62 @@
       "link": "https://youtu.be/GeVEn6-4xd0",
       "modelFormat": ""
     }
+  },
+  {
+    "id": "work-005",
+    "title": "XiaoBao",
+    "year": "2024",
+    "type": "painting",
+    "series": "",
+    "medium": "",
+    "size": "",
+    "thumbnail": "img/works/work-005.png",
+    "image": "img/works/work-005.png",
+    "description": "",
+    "content": {
+      "kind": "image",
+      "src": "img/works/work-005.png",
+      "poster": "img/works/work-005.png",
+      "link": "",
+      "modelFormat": ""
+    }
+  },
+  {
+    "id": "work-006",
+    "title": "Organic Pulse",
+    "year": "2024",
+    "type": "painting",
+    "series": "quantum-refraction",
+    "medium": "",
+    "size": "",
+    "thumbnail": "img/works/work-006.jpg",
+    "image": "img/works/work-006.jpg",
+    "description": "",
+    "content": {
+      "kind": "image",
+      "src": "img/works/work-006.jpg",
+      "poster": "img/works/work-006.jpg",
+      "link": "",
+      "modelFormat": ""
+    }
+  },
+  {
+    "id": "work-007",
+    "title": "Chadra",
+    "year": "2025",
+    "type": "mixed-media",
+    "series": "",
+    "medium": "",
+    "size": "",
+    "thumbnail": "img/works/work-007.png",
+    "image": "img/works/work-007.png",
+    "description": "",
+    "content": {
+      "kind": "image",
+      "src": "img/works/work-007.png",
+      "poster": "img/works/work-007.png",
+      "link": "",
+      "modelFormat": ""
+    }
   }
 ]
