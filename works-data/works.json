@@ -150,5 +150,24 @@
       "link": "",
       "modelFormat": ""
     }
+  },
+  {
+    "id": "work-009",
+    "title": "3D测试",
+    "year": "",
+    "type": "",
+    "series": "",
+    "medium": "",
+    "size": "",
+    "thumbnail": "img/works/work-009.png",
+    "image": "img/works/work-009.png",
+    "description": "",
+    "content": {
+      "kind": "model",
+      "src": "img/works/work-009.png",
+      "poster": "img/works/work-009.png",
+      "link": "https://sketchfab.com/models/dcb15ccc80444c2b9fa65f8643c61931/embed",
+      "modelFormat": ""
+    }
   }
 ]

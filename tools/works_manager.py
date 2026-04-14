@@ -125,6 +125,7 @@ class WorksManagerApp(tk.Tk):
         self.works_json_path = self.project_dir / "works-data" / "works.json"
         self.filters_json_path = self.project_dir / "works-data" / "filters.json"
         self.works_img_dir = self.project_dir / "img" / "works"
+        self.field_options = self._load_field_options()
 
         self.works: List[Work] = []
         self.current_index: Optional[int] = None
@@ -132,6 +133,33 @@ class WorksManagerApp(tk.Tk):
         self._build_ui()
         self._load_works()
         self._refresh_list()
+
+    def _load_field_options(self) -> Dict[str, List[str]]:
+        filters = _read_json(self.filters_json_path, default={})
+        groups = filters.get("groups", []) if isinstance(filters, dict) else []
+        options: Dict[str, List[str]] = {}
+        if isinstance(groups, list):
+            for group in groups:
+                if not isinstance(group, dict):
+                    continue
+                key = str(group.get("key", "")).strip()
+                raw_opts = group.get("options", [])
+                if not key or not isinstance(raw_opts, list):
+                    continue
+                options[key] = [str(v) for v in raw_opts if str(v).strip()]
+
+        # Optional key in filters.json; fallback to fixed content kinds.
+        content_kinds = (
+            options.get("content_kind")
+            or options.get("contentType")
+            or options.get("kind")
+            or ["image", "video", "audio", "web", "model"]
+        )
+        return {
+            "type": options.get("type", []),
+            "series": options.get("series", []),
+            "content_kind": content_kinds,
+        }
 
     def _resolve_project_dir(self) -> Path:
         cfg = _read_json(_config_path(), default={})
@@ -216,6 +244,18 @@ class WorksManagerApp(tk.Tk):
             ttk.Label(editor, text=label).grid(row=r, column=0, sticky=W, padx=(0, 10))
             ttk.Entry(editor, textvariable=var).grid(row=r, column=1, sticky="ew", padx=(0, 10))
 
+        def add_select(r, label, var, values):
+            ttk.Label(editor, text=label).grid(row=r, column=0, sticky=W, padx=(0, 10))
+            combo = ttk.Combobox(
+                editor,
+                textvariable=var,
+                values=values,
+                state="readonly",
+            )
+            combo.grid(row=r, column=1, sticky="ew", padx=(0, 10))
+            if values and not var.get():
+                var.set(values[0])
+
         self.title_var = tk.StringVar(value="")
         self.year_var = tk.StringVar(value="")
         self.type_var = tk.StringVar(value="")
@@ -230,11 +270,11 @@ class WorksManagerApp(tk.Tk):
 
         add_entry(1, "标题", self.title_var)
         add_entry(2, "年份", self.year_var)
-        add_entry(3, "类型", self.type_var)
-        add_entry(4, "系列", self.series_var)
+        add_select(3, "类型", self.type_var, self.field_options["type"])
+        add_select(4, "系列", self.series_var, self.field_options["series"])
         add_entry(5, "媒介", self.medium_var)
         add_entry(6, "尺寸(可选)", self.size_var)
-        add_entry(7, "内容类型(image/video/audio/web/model)", self.content_kind_var)
+        add_select(7, "内容类型", self.content_kind_var, self.field_options["content_kind"])
         add_entry(8, "内容源src", self.content_src_var)
         add_entry(9, "封面poster(可选)", self.content_poster_var)
         add_entry(10, "网页/3D链接link(可选)", self.content_link_var)

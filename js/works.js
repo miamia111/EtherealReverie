@@ -5,7 +5,7 @@ const modalCloseBtn = document.querySelector(".modal-close")
 const modalLeftPanel = document.getElementById("modal-left")
 const modalRightPanel = document.querySelector(".modal-right")
 const modalMedia = document.getElementById("modal-media")
-
+const searchInput = document.getElementById('works-search');
 const mdFiles = ["./works-data/Ophelia.md", "./works-data/Ophanim.md"]
 
 let works = []
@@ -141,6 +141,25 @@ function syncFilterUI(){
   }
 }
 
+function setupSearchEvents() {
+  if (!searchInput) return;
+
+  // 监听搜索输入
+  searchInput.addEventListener('input', () => {
+    const value = searchInput.value.trim();
+
+    if (value !== "") {
+      // 核心逻辑：搜索时清空所有已选的 Filter
+      filterGroups.forEach((group) => {
+        activeFilters[group.key] = "all";
+      });
+      syncFilterUI(); // 更新按钮的 UI 状态（把高亮切回 All）
+    }
+    
+    applyFilters(); // 执行过滤
+  });
+}
+
 function setupFilterEvents(){
   filterBar?.addEventListener("click",(event)=>{
     const target = event.target instanceof HTMLElement ? event.target : null
@@ -159,9 +178,13 @@ function setupFilterEvents(){
 
     const optionBtn = target.closest(".filter-option-btn")
     if(!optionBtn) return
+    if (searchInput) {
+      searchInput.value = "";
+    }
     const groupKey = optionBtn.getAttribute("data-group")
     const value = optionBtn.getAttribute("data-value") || "all"
     if(!groupKey) return
+    
 
     activeFilters[groupKey] = value
     syncFilterUI()
@@ -182,6 +205,8 @@ function setupFilterEvents(){
     }
   })
 }
+
+
 
 async function loadWorks(){
   try{
@@ -219,15 +244,27 @@ async function loadWorks(){
   applyFilters()
 }
 
-function applyFilters(){
-  const filtered = works.filter((work)=>{
-    return filterGroups.every((group)=>{
-      const selected = activeFilters[group.key] || "all"
-      if(selected === "all") return true
-      return getWorkFieldValue(work, group.key) === selected
-    })
-  })
-  renderWorks(filtered)
+function applyFilters() {
+  // 获取搜索框的值
+  const searchTerm = searchInput ? searchInput.value.toLowerCase().trim() : "";
+
+  const filtered = works.filter((work) => {
+    // 1. 检查 Filter 筛选
+    const matchesFilters = filterGroups.every((group) => {
+      const selected = activeFilters[group.key] || "all";
+      if (selected === "all") return true;
+      return getWorkFieldValue(work, group.key) === selected;
+    });
+
+    // 2. 检查搜索关键词 (匹配标题或描述)
+    const title = (work.title || "").toLowerCase();
+    const desc = (work.description || "").toLowerCase();
+    const matchesSearch = title.includes(searchTerm) || desc.includes(searchTerm);
+
+    return matchesFilters && matchesSearch;
+  });
+
+  renderWorks(filtered);
 }
 
 function renderWorks(list){
@@ -352,6 +389,17 @@ if (kind === "video") {
     // 如果是 3D 模型，可能需要允许某些传感器
     if (kind === "model") {
       mediaEl.allow = "xr-spatial-tracking; vr; gyroscope; accelerometer";
+      // 自动清洗链接，确保带有 /embed
+    mediaEl.src = convertToEmbedUrl(content.link);
+    
+    // 参考官方提供的权限设置
+    mediaEl.allow = "autoplay; fullscreen; xr-spatial-tracking";
+    mediaEl.setAttribute("xr-spatial-tracking", "");
+    mediaEl.setAttribute("execution-while-out-of-viewport", "");
+    mediaEl.setAttribute("execution-while-not-rendered", "");
+    
+    mediaEl.allowFullscreen = true;
+    mediaEl.frameBorder = "0"; // 移除边框
     }
   }
 }
@@ -489,5 +537,6 @@ modal.addEventListener("click",(event)=>{ if(event.target === modal) closeAnimat
 document.addEventListener("keydown",(event)=>{ if(event.key === "Escape" && modal.classList.contains("active")) closeAnimation() })
 
 setupFilterEvents()
+setupSearchEvents();
 setupImageProtection()
 loadFilterConfig().then(loadWorks)

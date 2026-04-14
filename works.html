@@ -26,8 +26,24 @@
 
 <main>
   <section class="works-page">
-    <div class="filter-bar" id="filterBar"></div>
-
+    <div class="works-nav-wrapper">
+    <div class="filter-bar" id="filterBar"></div>   
+    <div class="group">
+      <svg viewBox="0 0 24 24" aria-hidden="true" class="search-icon">
+        <g>
+          <path d="M21.53 20.47l-3.66-3.66C19.19 15.35 20 13.77 20 12c0-4.41-3.59-8-8-8s-8 3.59-8 8 3.59 8 8 8c1.77 0 3.35-.81 4.81-2.13l3.66 3.66c.15.15.35.22.53.22s.38-.07.53-.22c.29-.29.29-.77 0-1.06zM5.5 12c0-3.58 2.92-6.5 6.5-6.5s6.5 2.92 6.5 6.5-2.92 6.5-6.5 6.5-6.5-2.92-6.5-6.5z"></path>
+        </g>
+      </svg>
+      <input 
+        id="works-search" 
+        class="input" 
+        type="search" 
+        placeholder="Search..." 
+        name="searchbar"
+      >
+    </div>
+  </div>
+   
     <div class="worksGrid" id="worksGrid">
       <!-- JS will populate works here -->
     </div>
