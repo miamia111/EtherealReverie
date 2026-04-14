@@ -149,6 +149,7 @@ main,
   width: 100%;
   height: 100%;
   object-fit: cover; /* 自动裁切以填满空间 */
+  transition: transform 0.8s cubic-bezier(0.2, 0, 0.2, 1);
 }
 
 .exhibition-image-wrapper:hover img {
@@ -276,25 +277,20 @@ main,
   padding: 2rem;
   border-radius: 16px;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  
   position: relative;
   z-index: 10; /* 确保层级在 Socials 之上 */
-  
-  max-height: 300px; /* 初始对齐高度 */
+  max-height: 360px; /* 初始对齐高度 */
   overflow: hidden;
   transition: max-height 0.5s ease;
-  /* 渐变遮罩：折叠时有消失感 */
-  mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+  
 }
 
 .news-sticky-content:hover {
-  max-height: 650px; /* 展开高度：现在它会向下盖住 Socials */
+  max-height: 800px; /* 展开高度：现在它会向下盖住 Socials */
   mask-image: none;
   -webkit-mask-image: none;
-  overflow-y: auto;
+  overflow-y: hidden;
 }
-
 .news-header {
   font-size: 1.2rem;
   letter-spacing: 0.1em;
@@ -316,8 +312,17 @@ main,
 
 .news-item.featured img {
   width: 100%;
+  height: 150px;
+  object-fit: cover;
+  object-position: center;
   border-radius: 8px;
   margin-bottom: 1rem;
+  display:block;
+}
+/* 如果你希望图片在鼠标悬停时能看到更多细节（可选） */
+.news-item.featured:hover img {
+  filter: brightness(1.1);
+  transition: filter 0.3s ease;
 }
 
 .news-item.text-only {
@@ -340,135 +345,103 @@ main,
   }
 }
 
-/* 外层包装，控制在侧边栏的位置 */
-.social-card-wrapper {
-  position: relative;
-  margin-top: auto; /* 固定在侧边栏底部，不受 News Feed 折叠影响 */
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  padding-bottom: 0px; /* 与左侧对齐的最终微调 */
-  z-index: 5; /* 层级较低，被 News 覆盖 */
-}
-/* 容器保持自适应 */
-.card {
-  position: relative;
-  width: 85%; 
-  aspect-ratio: 1 / 1; 
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 30px;
-  overflow: hidden;
-  transition: all 1s ease-in-out;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  margin: 0 auto;
-}
-/* 渐变背景 - 建议使用你网站的主色调 */
-.background {
-  position: absolute;
-  inset: 0;
-  background-image: linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%);
-  opacity: 0.8;
+/* 外链 */
+.contact-floating-bar {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 999; /* 确保在所有内容之上 */
+  display: flex !important; /* 强制横排 */
+  flex-direction: row !important; 
+  gap: 15px;
+  padding: 0;
+  margin: 0;
 }
 
-/* 修正文字：字体、间距与右上角滑行 */
-.sitelogo {
+.example-2 .icon-content {
+  position: relative;
+  list-style: none;
+}
+
+/* 调整 Tooltip 位置：现在是在图标上方弹出 */
+.example-2 .icon-content .tooltip {
   position: absolute;
-  /* 初始居中 */
-  right: 50%;
-  bottom: 50%;
-  color: #ffffff;
-  transform: translate(50%, 50%); 
-  transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+  top: -10px;      /* 改为负值，让它向上弹 */
+  left: 50%;
+  transform: translateX(-50%);
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 5px;
+  opacity: 0;
+  visibility: hidden;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   white-space: nowrap;
 }
 
-/* 悬停时：文字滑向右上角，且不被遮挡 */
-.card:hover .sitelogo {
-  right: 20px;  /* 距离右边 15 像素 */
-  bottom: calc(100% - 40px); /* 距离顶部 30 像素 */
-  transform: translate(0, 0); /* 归零 translate 的偏移 */
-  font-size: 1rem;
+.example-2 .icon-content:hover .tooltip {
   opacity: 1;
+  visibility: visible;
+  top: -45px; /* 向上滑动的距离 */
 }
 
-/* 基础 Box 样式：恢复那个奇特的圆角 */
-.box {
-  position: absolute;
-  padding: 10px;
-  background: rgba(255, 255, 255, 0.2); /* 默认半透明 */
-  backdrop-filter: blur(5px);
-  border-top: 2px solid rgb(255, 255, 255);
-  border-right: 1px solid white;
-  /* 灵魂圆角：必须保持这个复杂的比例 */
-  border-radius: 10% 13% 42% 0% / 10% 12% 75% 0%;
-  box-shadow: rgba(100, 100, 111, 0.3) -7px 7px 29px 0px;
-  transform-origin: bottom left;
-  transition: all 1s ease-in-out;
-  display: block;
-  align-items: center;
-  justify-content: center;
-}
-
-/* 恢复变色效果：使用伪元素渲染渐变 */
-.box::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  opacity: 0;
-  transition: all 0.5s ease-in-out;
-  z-index: -1;
-}
-/* 2. 精确控制图标位置 */
-.box .icon {
-  position: absolute;
-  /* 将图标推向右上角 */
-  top: 15%; 
-  right: 15%;
-  
+/* 图标基础样式修正 */
+.example-2 .icon-content a {
+  position: relative;
+  overflow: hidden;
   display: flex;
-  align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
-  transition: all 0.5s ease-in-out;
+  align-items: center;
+  width: 45px; /* 稍微缩小一点，更精致 */
+  height: 45px;
+  border-radius: 50%;
+  color: #fff; /* 默认图标颜色 */
+  background-color: rgba(66, 65, 65, 0.253); /* 半透明底色，符合你的艺术风 */
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease-in-out;
 }
 
-/* 3. 针对不同大小的盒子进行微调 (可选) */
-/* 因为 box3 比较小，可以稍微减少偏移防止图标飞出去 */
-.box3 .icon {
-  top: 10%;
-  right: 10%;
-}
-/* 悬停时变色 */
-.box:hover::before {
-  opacity: 1;
+.example-2 .icon-content a svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+  z-index: 1;
 }
 
-/* 三个 Box 的独立渐变色 */
-.box1::before { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #ff53d4 60%, #62c2fe 90%); }
-.box2::before { background: radial-gradient(circle at 30% 107%, #91e9ff 0%, #00ACEE 90%); }
-.box3::before { background: radial-gradient(circle at 30% 107%, #969fff 0%, #b349ff 90%); }
-
-/* 盒子尺寸与位置 */
-.box1 { width: 70%; height: 70%; bottom: -70%; left: -70%; }
-.box2 { width: 50%; height: 50%; bottom: -50%; left: -50%; transition-delay: 0.2s; }
-.box3 { width: 30%; height: 30%; bottom: -30%; left: -30%; transition-delay: 0.4s; }
-
-/* 悬停触发 */
-.card:hover .box {
-  bottom: -1px;
-  left: -1px;
+/* 填充效果 */
+.example-2 .icon-content a .filled {
+  position: absolute;
+  top: auto;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 0;
+  transition: all 0.3s ease-in-out;
 }
 
-/* 图标颜色 */
-.icon .svg {
-  fill: rgba(255, 255, 255, 0.8);
-  width: 24px;
-  height: 24px;
-  transition: all 0.5s ease-in-out;
+.example-2 .icon-content a:hover .filled {
+  height: 100%;
 }
-.box:hover .svg {
-  fill: white;
-  filter: drop-shadow(0 0 5px white);
+
+/* 颜色分配 */
+.example-2 .icon-content a[data-social="youtube"] .filled,
+.example-2 .icon-content a[data-social="youtube"] + .tooltip {
+  background-color: #ff0000;
+}
+
+.example-2 .icon-content a[data-social="email"] .filled,
+.example-2 .icon-content a[data-social="email"] + .tooltip {
+  background-color: #346ddf;
+}
+
+.example-2 .icon-content a[data-social="instagram"] .filled,
+.example-2 .icon-content a[data-social="instagram"] + .tooltip {
+  background: linear-gradient(45deg, #405de6, #5b51db, #b33ab4, #e1306c, #fd1f1f);
+}
+.example-2 .icon-content a[data-social="xiaohongshu"] .filled,
+.example-2 .icon-content a[data-social="xiaohongshu"] + .tooltip {
+  background-color: #ff2442;
 }
