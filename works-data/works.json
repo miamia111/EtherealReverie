@@ -131,5 +131,24 @@
       "link": "",
       "modelFormat": ""
     }
+  },
+  {
+    "id": "work-008",
+    "title": "内视频测试",
+    "year": "2026",
+    "type": "video",
+    "series": "",
+    "medium": "",
+    "size": "",
+    "thumbnail": "img/works/work-008.jpg",
+    "image": "img/works/work-008.jpg",
+    "description": "",
+    "content": {
+      "kind": "video",
+      "src": "/video/MOVI0093.webm",
+      "poster": "img/works/work-008.jpg",
+      "link": "",
+      "modelFormat": ""
+    }
   }
 ]

@@ -245,22 +245,7 @@
   display:block;
   transition:transform .4s ease;
   }
-
-  .watermark-layer{
-    position: absolute;
-    inset: 0;
-    background-image: var(--watermark-image);
-    background-repeat: repeat;
-    background-size: 280px 190px;
-    pointer-events: none;
-    user-select: none;
-  }
-
-  .card-watermark{
-    opacity: .52;
-    z-index: 2;
-  }
-  
+   
   .work-card:hover img{
   transform:scale(1.05);
   }

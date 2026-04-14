@@ -7,7 +7,6 @@ const modalRightPanel = document.querySelector(".modal-right")
 const modalMedia = document.getElementById("modal-media")
 
 const mdFiles = ["./works-data/Ophelia.md", "./works-data/Ophanim.md"]
-const sessionWatermarkSeed = `SW-${Date.now().toString(36)}-${Math.random().toString(36).slice(2,6).toUpperCase()}`
 
 let works = []
 let filterGroups = []
@@ -67,27 +66,6 @@ function setupImageProtection(){
   })
 }
 
-function buildWatermarkDataUri(text){
-  const safeText = String(text).replace(/[<>&"]/g, "")
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="380" height="260"><g transform="rotate(-28 190 130)"><text x="20" y="95" font-size="18" fill="rgba(255,255,255,0.20)" font-family="Arial, sans-serif">${safeText}</text><text x="20" y="165" font-size="18" fill="rgba(255,255,255,0.17)" font-family="Arial, sans-serif">${safeText}</text></g></svg>`
-  return `url("data:image/svg+xml;utf8,${encodeURIComponent(svg)}")`
-}
-
-function applyWatermarkLayer(layer, watermarkText){
-  if(!layer) return
-  layer.style.setProperty("--watermark-image", buildWatermarkDataUri(watermarkText))
-}
-
-function ensureModalWatermarkLayer(){
-  let layer = document.getElementById("modal-watermark")
-  if(layer) return layer
-  layer = document.createElement("div")
-  layer.id = "modal-watermark"
-  layer.className = "watermark-layer modal-watermark"
-  layer.setAttribute("aria-hidden", "true")
-  modalRightPanel?.appendChild(layer)
-  return layer
-}
 
 async function loadFilterConfig(){
   try{
@@ -266,10 +244,8 @@ function renderWorks(list){
     card.className = "work-card"
     card.innerHTML = `
       <img src="${preview}" alt="${work.title || "work"}">
-      <div class="watermark-layer card-watermark" aria-hidden="true"></div>
       <div class="work-meta"><strong>${work.title || "Untitled"}</strong> · ${work.year || ""}</div>
     `
-    applyWatermarkLayer(card.querySelector(".card-watermark"), `${work.title || "Untitled"} · Si Wu · ${sessionWatermarkSeed}`)
     card.addEventListener("click",()=>openAnimation(work, card))
     worksGrid.appendChild(card)
   })
@@ -287,48 +263,98 @@ function setModalMedia(work){
   const kind = content.kind || "image"
   let mediaEl = null
 
-  if(kind === "video"){
-    mediaEl = document.createElement("video")
-    mediaEl.className = "modal-main-media"
-    mediaEl.controls = true
-    mediaEl.playsInline = true
-    mediaEl.preload = "metadata"
-    mediaEl.setAttribute("controlsList", "nodownload noplaybackrate")
-    if(content.poster) mediaEl.poster = content.poster
-    if(content.sources.length > 0){
-      content.sources.forEach((srcObj)=>{
-        const src = document.createElement("source")
-        src.src = srcObj.src || ""
-        if(srcObj.type) src.type = srcObj.type
-        mediaEl.appendChild(src)
-      })
-    }else{
-      mediaEl.src = content.src || work.image || ""
-    }
-  }else if(kind === "audio"){
-    mediaEl = document.createElement("audio")
-    mediaEl.className = "modal-main-media modal-audio"
-    mediaEl.controls = true
-    mediaEl.preload = "metadata"
-    mediaEl.setAttribute("controlsList", "nodownload noplaybackrate")
-    mediaEl.src = content.src || ""
-  }else if(kind === "web"){
-    if(content.link){
-      mediaEl = document.createElement("iframe")
-      mediaEl.className = "modal-main-media modal-iframe"
-      mediaEl.src = content.link
-      mediaEl.referrerPolicy = "strict-origin-when-cross-origin"
-      mediaEl.allowFullscreen = true
-    }
-  }else if(kind === "model"){
-    // 简化实现：优先外链预览，避免强绑 특정 3D 运行时
-    if(content.link){
-      mediaEl = document.createElement("iframe")
-      mediaEl.className = "modal-main-media modal-iframe"
-      mediaEl.src = content.link
-      mediaEl.allowFullscreen = true
+  // --- 自动纠错补丁：如果是 web 类型但链接是视频平台，强制转为 video ---
+  const rawUrl = content.link || content.src || "";
+  if (kind === "web" && (rawUrl.includes("youtube.com") || rawUrl.includes("youtu.be") || rawUrl.includes("vimeo.com"))) {
+    console.warn("Detected video link in 'web' type, auto-correcting to 'video'...");
+    kind = "video";
+  }
+
+  // 辅助函数：将普通链接转为 Embed 链接
+function convertToEmbedUrl(url) {
+  if (!url) return "";
+  // 匹配各种 YouTube 格式的正则 (watch?v=, youtu.be/, embed/, v/)
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+  const match = url.match(regExp);
+
+  if (match && match[2].length === 11) {
+      const videoId = match[2];
+      // 重新拼接最纯净的 embed 链接
+      return `https://www.youtube.com/embed/${videoId}?rel=0&showinfo=0&enablejsapi=1`;
+  }
+  if (url.includes("vimeo.com/")) {
+    const id = url.split("/").pop();
+    return `https://player.vimeo.com/video/${id}`;
+  }
+  return url;
+}
+
+// 主逻辑
+if (kind === "video") {
+  // 判断是本地文件还是外链
+  const isExternal = content.link || (content.src && content.src.includes("http") && !content.src.match(/\.(mp4|webm|ogg)$/i));
+
+  if (isExternal) {
+    mediaEl = document.createElement("iframe");
+    mediaEl.className = "modal-main-media modal-iframe video-external";
+    
+    // 1. 获取转换后的 URL
+    const finalUrl = convertToEmbedUrl(content.link || content.src);
+    
+    // 2. 调试：如果这里打印出来的是 "https://www.youtube.com/" 
+    // 说明 content.link 或 content.src 的数据结构有问题
+    console.log("Debug - Raw URL:", content.link || content.src);
+    console.log("Debug - Converted URL:", finalUrl);
+
+    mediaEl.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+    mediaEl.allowFullscreen = true;
+    
+    // 3. 先把空的 iframe 挂载，再异步设置 src
+    setTimeout(() => {
+        if (finalUrl) {
+            mediaEl.src = finalUrl;
+        }
+    }, 0);
+  } else {
+    mediaEl = document.createElement("video");
+    mediaEl.className = "modal-main-media";
+    mediaEl.controls = true;
+    mediaEl.playsInline = true;
+    mediaEl.preload = "metadata";
+    mediaEl.setAttribute("controlsList", "nodownload noplaybackrate");
+    if (content.poster) mediaEl.poster = content.poster;
+    
+    if (content.sources && content.sources.length > 0) {
+      content.sources.forEach((srcObj) => {
+        const src = document.createElement("source");
+        src.src = srcObj.src || "";
+        if (srcObj.type) src.type = srcObj.type;
+        mediaEl.appendChild(src);
+      });
+    } else {
+      mediaEl.src = content.src || work.image || "";
     }
   }
+} else if (kind === "audio") {
+  // 音频逻辑基本没问题
+  mediaEl = document.createElement("audio");
+  mediaEl.className = "modal-main-media modal-audio";
+  mediaEl.controls = true;
+  mediaEl.src = content.src || "";
+} else if (kind === "web" || kind === "model") {
+  // 模型和网页统一处理，但增加安全策略
+  if (content.link) {
+    mediaEl = document.createElement("iframe");
+    mediaEl.className = `modal-main-media modal-iframe modal-${kind}`;
+    mediaEl.src = content.link;
+    mediaEl.referrerPolicy = "strict-origin-when-cross-origin";
+    mediaEl.allowFullscreen = true;
+    // 如果是 3D 模型，可能需要允许某些传感器
+    if (kind === "model") {
+      mediaEl.allow = "xr-spatial-tracking; vr; gyroscope; accelerometer";
+    }
+  }
+}
 
   if(!mediaEl){
     mediaEl = document.createElement("img")
@@ -340,8 +366,7 @@ function setModalMedia(work){
   modalMedia.appendChild(mediaEl)
   activeMediaElement = mediaEl
 
-  const modalWatermark = ensureModalWatermarkLayer()
-  applyWatermarkLayer(modalWatermark, `${work.title || "Untitled"} · Si Wu Studio · ${sessionWatermarkSeed}`)
+  
 }
 
 function setModalContent(work){
