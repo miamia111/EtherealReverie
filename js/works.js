@@ -379,6 +379,12 @@ if (kind === "video") {
   mediaEl.controls = true;
   mediaEl.src = content.src || "";
 } else if (kind === "web" || kind === "model") {
+  
+  modalMedia.innerHTML = `
+        <div class="media-loader-container">
+            <div class="loader">Loading...</div>
+        </div>
+    `;
   // 模型和网页统一处理，但增加安全策略
   if (content.link) {
     mediaEl = document.createElement("iframe");
@@ -386,9 +392,18 @@ if (kind === "video") {
     mediaEl.src = content.link;
     mediaEl.referrerPolicy = "strict-origin-when-cross-origin";
     mediaEl.allowFullscreen = true;
+    mediaEl.onload = function() {
+      const loaderContainer = modalMedia.querySelector('.media-loader-container');
+      if (loaderContainer) {
+          loaderContainer.style.opacity = '0';
+          setTimeout(() => loaderContainer.remove(), 500); // 渐隐后移除
+      }
+  };
+    
     // 如果是 3D 模型，可能需要允许某些传感器
     if (kind === "model") {
-      mediaEl.allow = "xr-spatial-tracking; vr; gyroscope; accelerometer";
+      
+    mediaEl.allow = "xr-spatial-tracking; vr; gyroscope; accelerometer";
       // 自动清洗链接，确保带有 /embed
     mediaEl.src = convertToEmbedUrl(content.link);
     
