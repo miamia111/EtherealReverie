@@ -1,5 +1,6 @@
 window.addEventListener('load', () => {
     const container = document.getElementById('works-container');
+    const newsContainer = document.getElementById('news-feed-list');
     let allWorks = []; // 存储所有作品数据
 
     if (!container) return;
@@ -61,4 +62,54 @@ window.addEventListener('load', () => {
         }, 1000);
         }
     }
+
+    function escapeHtml(value) {
+        return String(value ?? "")
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#039;");
+    }
+
+    function renderNewsList(list) {
+        if (!newsContainer) return;
+        if (!Array.isArray(list) || list.length === 0) {
+            newsContainer.innerHTML = `
+                <div class="news-item text-only">
+                    <span class="news-date">--</span>
+                    <p>No news yet.</p>
+                </div>
+            `;
+            return;
+        }
+
+        newsContainer.innerHTML = list.map((item) => {
+            const style = item?.style === "text" ? "text-only" : "featured";
+            const date = escapeHtml(item?.date || "");
+            const title = escapeHtml(item?.title || "");
+            const description = escapeHtml(item?.description || "");
+            const image = escapeHtml(item?.image || "");
+            const link = String(item?.link || "").trim();
+            const hasLink = !!link;
+            const icon = hasLink ? `<span class="news-link-icon" aria-hidden="true">↗</span>` : "";
+            const content = `
+                ${style === "featured" && image ? `<div class="news-img-box"><img src="${image}" alt="${title || "News"}"></div>` : ""}
+                <span class="news-date">${date}</span>
+                <h4>${title}${icon}</h4>
+                ${description ? `<p>${description}</p>` : ""}
+            `;
+            if (hasLink) {
+                return `<a class="news-item ${style} news-link-item" href="${escapeHtml(link)}" target="_blank" rel="noopener noreferrer">${content}</a>`;
+            }
+            return `<div class="news-item ${style}">${content}</div>`;
+        }).join("");
+    }
+
+    fetch('news-data/news.json')
+        .then((res) => res.json())
+        .then((data) => renderNewsList(data))
+        .catch(() => {
+            renderNewsList([]);
+        });
 });

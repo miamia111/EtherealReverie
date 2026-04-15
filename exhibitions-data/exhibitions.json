@@ -16,23 +16,28 @@
       },
       {
         "kind": "image",
-        "caption": "外链视频一句话简介（YouTube/Vimeo 等会自动转 embed）。",
+        "caption": "",
         "src": "img/exhibitions/exh-001-m02.webp"
       },
       {
         "kind": "image",
-        "caption": "",
+        "caption": "Entrance",
         "src": "img/exhibitions/exh-001-m05.webp"
       },
       {
         "kind": "image",
-        "caption": "3D 模型外链一句话简介（建议使用 embed 链接）。",
+        "caption": "JuRuo Golden Beach Hotel",
         "src": "img/exhibitions/exh-001-m03.webp"
       },
       {
         "kind": "image",
-        "caption": "",
+        "caption": "JuRuo Golden Beach Hotel/Gallery",
         "src": "img/exhibitions/exh-001-m04.webp"
+      },
+      {
+        "kind": "image",
+        "caption": "Merchant Samples",
+        "src": "img/exhibitions/exh-001-m06.webp"
       }
     ]
   },
@@ -43,13 +48,43 @@
     "type": "solo",
     "location": "ZhongHuaErNu Gallery · Xiamen,China",
     "curator": "Si Wu",
-    "theme": "主题描述……",
-    "cover": "img/works/work-006.jpg",
+    "theme": "Ethereal Reverie marks a pivotal moment in my artistic evolution. As my practice progressed, I realized that creating in isolation has its limits; art only truly breathes through dialogue. To move beyond the boundaries of the studio, I decided to independently organize this exhibition as a platform for exchange—a space to present over 30 works and engage in constructive critique with both the public and industry professionals.\nThe title, Ethereal Reverie, reflects my ongoing fascination with the nature of matter: the tension between what we perceive as tangible reality and what we regard as fantasy. The exhibition is structured into three distinct yet interconnected sections:\n\nSection I: Quantum Refraction – Explorations of texture and form inspired by the world-building of science fiction.\n\nSection II: Visions Enchanted – Mixed-media works rooted in ancient mythology, reinterpreted through a contemporary lens.\n\nSection III: Physical Plane– Traditional impressionist pieces that return to the essence of our immediate reality.",
+    "cover": "img/exhibitions/IMG_20241117.webp",
     "media": [
       {
         "kind": "image",
-        "src": "img/works/work-006.jpg",
-        "caption": "图片一句话简介。"
+        "src": "img/exhibitions/exh-002-m01.webp",
+        "caption": "Visions Enchanted"
+      },
+      {
+        "kind": "image",
+        "caption": "Quantum Refraction",
+        "src": "img/exhibitions/exh-002-m02.webp"
+      },
+      {
+        "kind": "image",
+        "caption": "Physical Plane",
+        "src": "img/exhibitions/exh-002-m03.webp"
+      },
+      {
+        "kind": "image",
+        "caption": "Student taking pictures",
+        "src": "img/exhibitions/exh-002-m04.webp"
+      },
+      {
+        "kind": "image",
+        "caption": "Opening Day",
+        "src": "img/exhibitions/exh-002-m05.webp"
+      },
+      {
+        "kind": "image",
+        "caption": "visitors",
+        "src": "img/exhibitions/exh-002-m06.webp"
+      },
+      {
+        "kind": "video",
+        "caption": "promotion trailer",
+        "link": "https://youtu.be/Md-qq4ScOE8"
       }
     ]
   }

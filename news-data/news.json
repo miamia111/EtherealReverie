@@ -1,0 +1,29 @@
+[
+  {
+    "id": "news-001",
+    "date": "AUG 12, 2024",
+    "title": "Studio Visit: The Red Thread",
+    "description": "Progress update on the new series.",
+    "image": "img/NewsFeed/newstop.webp",
+    "link": "",
+    "style": "featured"
+  },
+  {
+    "id": "news-002",
+    "date": "10.25",
+    "title": "Upcoming: Shanghai Art Fair",
+    "description": "",
+    "image": "img/NewsFeed/newstop.webp",
+    "link": "https://example.com",
+    "style": "featured"
+  },
+  {
+    "id": "news-003",
+    "date": "11.02",
+    "title": "New Series: Female Divinity",
+    "description": "",
+    "image": "",
+    "link": "",
+    "style": "text"
+  }
+]

@@ -1,8 +1,14 @@
 # Works Manager（简易作品管理器）
 
-这个工具是一个桌面版（可打包成 `exe`）的简易管理器，用来维护你站点的源数据：`works-data/works.json`。
+这个工具是一个桌面版（可打包成 `exe`）的简易管理器，用来维护站点源数据。
 
-`works.html` 通过 `js/works.js` 动态读取 `works-data/works.json`，所以当你在本工具里「添加/编辑/删除」并保存后，只需要刷新 `works.html` 就能看到变化。
+当前版本是**单窗口三标签页**：
+
+- `Works`（`works-data/works.json`）
+- `Exhibitions`（`exhibitions-data/exhibitions.json`）
+- `News`（`news-data/news.json`）
+
+可开启「自动保存（增删改时）」。
 
 ## 功能
 
@@ -13,10 +19,13 @@
 - 编辑多媒体字段：`content.kind/src/poster/link/modelFormat`
   - 可用于图片、动图、视频、音频、网页链接、3D外链预览
 - 编辑筛选配置：`works-data/filters.json`（可增删顶部筛选字段和选项）
-- 管理展览数据：在主窗口点击「管理展览(exhibitions.json)」打开展览管理窗口
-  - 维护 `exhibitions-data/exhibitions.json`
-  - 支持字段：名称/年份/类型(solo/group)/地点/策展人/主题描述/横幅封面cover
-  - `media` 使用 JSON 数组编辑（便于不限制数量，且支持 image/video/model/web + caption）
+- 在 `Exhibitions` 标签管理展览数据：
+  - 字段：名称/年份/类型(solo/group)/地点/策展人/主题描述/横幅封面cover
+  - `media` 为可视化列表：支持添加/删除、类型单选、caption、src/link、本地浏览复制
+- 在 `News` 标签管理首页 News Feed：
+  - 支持添加/删除 News 条目
+  - 支持外链（首页会显示跳转图标）
+  - 图片浏览会自动复制到 `img/NewsFeed/`
 
 ## 运行前提
 
@@ -51,10 +60,13 @@ python .\tools\works_manager.py
 
 - 打开/刷新 `works.html`
 - 打开/刷新 `exhibition.html`
+- 打开/刷新 `index.html`（News Feed）
 - 如果你是用浏览器直接打开 `file://`，`fetch` 可能会失败；建议用本地服务器访问（如 VS Code Live Server）。
 - `works.html` 会读取：
   - `works-data/works.json`（作品数据）
   - `works-data/filters.json`（筛选按钮配置）
 - `exhibition.html` 会读取：
   - `exhibitions-data/exhibitions.json`（展览数据）
+- `index.html` 会读取：
+  - `news-data/news.json`（News Feed 数据）
 

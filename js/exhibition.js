@@ -90,8 +90,24 @@ function renderMediaItem(m){
   const poster = String(m?.poster || "").trim()
 
   if(kind === "video"){
-    const embed = convertToEmbedUrl(link || src)
     const safeTitle = caption ? caption : "Video"
+    const localVideoPattern = /\.(mp4|webm|ogg|mov|m4v)(\?.*)?$/i
+    const useLocalVideo = !!src && localVideoPattern.test(src)
+
+    if(useLocalVideo){
+      return `
+        <figure class="exh-media-card exh-media-video">
+          <div class="exh-media-frame">
+            <video class="exh-media-videoLocal" controls preload="metadata" playsinline ${poster ? `poster="${escapeHtml(poster)}"` : ""}>
+              <source src="${escapeHtml(src)}">
+            </video>
+          </div>
+          ${caption ? `<figcaption class="exh-media-caption">${caption}</figcaption>` : ""}
+        </figure>
+      `
+    }
+
+    const embed = convertToEmbedUrl(link || src)
     return `
       <figure class="exh-media-card exh-media-video">
         <div class="exh-media-frame">
