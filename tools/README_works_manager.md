@@ -13,6 +13,10 @@
 - 编辑多媒体字段：`content.kind/src/poster/link/modelFormat`
   - 可用于图片、动图、视频、音频、网页链接、3D外链预览
 - 编辑筛选配置：`works-data/filters.json`（可增删顶部筛选字段和选项）
+- 管理展览数据：在主窗口点击「管理展览(exhibitions.json)」打开展览管理窗口
+  - 维护 `exhibitions-data/exhibitions.json`
+  - 支持字段：名称/年份/类型(solo/group)/地点/策展人/主题描述/横幅封面cover
+  - `media` 使用 JSON 数组编辑（便于不限制数量，且支持 image/video/model/web + caption）
 
 ## 运行前提
 
@@ -46,8 +50,11 @@ python .\tools\works_manager.py
 ## 保存后如何查看效果
 
 - 打开/刷新 `works.html`
+- 打开/刷新 `exhibition.html`
 - 如果你是用浏览器直接打开 `file://`，`fetch` 可能会失败；建议用本地服务器访问（如 VS Code Live Server）。
 - `works.html` 会读取：
   - `works-data/works.json`（作品数据）
   - `works-data/filters.json`（筛选按钮配置）
+- `exhibition.html` 会读取：
+  - `exhibitions-data/exhibitions.json`（展览数据）
 

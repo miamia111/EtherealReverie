@@ -1,0 +1,367 @@
+/* Exhibitions page */
+
+.exhibitions-page{
+  padding-top: 6rem; /* avoid fixed header overlap */
+}
+
+.page-title{
+  font-size: clamp(1.8rem, 2.2vw, 2.4rem);
+  letter-spacing: .02em;
+  margin-bottom: 1.75rem;
+}
+
+.exhibition-list{
+  display: grid;
+  gap: 1.25rem;
+}
+
+.exhibition-loading{
+  padding: 1.25rem 1rem;
+  border: 1px dashed rgba(255,255,255,.16);
+  border-radius: 18px;
+  opacity: .82;
+}
+
+.exhibition-item{
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: 18px;
+  overflow: clip;
+  background: rgba(255,255,255,.03);
+  box-shadow: 0 14px 32px rgba(0,0,0,.28);
+}
+
+.exhibition-banner{
+  appearance: none;
+  border: 0;
+  width: 100%;
+  display: grid;
+  place-items: stretch;
+  position: relative;
+  min-height: clamp(220px, 32vw, 420px);
+  cursor: pointer;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+}
+
+.exhibition-banner:focus-visible{
+  outline: 2px solid rgba(255,255,255,.6);
+  outline-offset: -2px;
+}
+
+.exhibition-banner-bg{
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  filter: saturate(1.05) contrast(1.02);
+  transform: scale(1.01);
+  transition: transform .55s ease, filter .55s ease;
+}
+
+.exhibition-banner::after{
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(1200px 600px at 50% 45%, rgba(0,0,0,.15), rgba(0,0,0,.62) 70%),
+    linear-gradient(to bottom, rgba(0,0,0,.15), rgba(0,0,0,.65));
+  pointer-events: none;
+}
+
+.exhibition-item.is-open .exhibition-banner-bg,
+.exhibition-banner:hover .exhibition-banner-bg{
+  transform: scale(1.06);
+  filter: saturate(1.15) contrast(1.06);
+}
+
+.exhibition-tag{
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  z-index: 2;
+  padding: .35rem .6rem;
+  border-radius: 999px;
+  font-size: .78rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.92);
+  background: rgba(0,0,0,.35);
+  border: 1px solid rgba(255,255,255,.22);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.exhibition-titlewrap{
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  place-content: center;
+  gap: .15rem;
+  text-align: center;
+  padding: 2rem;
+}
+
+.exhibition-title{
+  font-family: 'Space Grotesk', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-weight: 600;
+  color: rgba(255,255,255,.95);
+  text-shadow: 0 14px 30px rgba(0,0,0,.55);
+  font-size: clamp(1.45rem, 2.8vw, 2.25rem);
+  line-height: 1.15;
+}
+
+.exhibition-year{
+  font-size: clamp(.95rem, 1.35vw, 1.15rem);
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  opacity: .9;
+  color: rgba(255,255,255,.9);
+}
+
+.exhibition-detail{
+  border-top: 1px solid rgba(255,255,255,.10);
+  background: rgba(10,10,14,.72);
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height .35s ease;
+}
+
+.exhibition-detail[hidden]{
+  display: block; /* keep layout measurable; JS toggles [hidden] */
+}
+
+.exhibition-detail-inner{
+  padding: 1.25rem clamp(1rem, 2.3vw, 1.75rem) 1.5rem;
+  display: grid;
+  gap: 1.1rem;
+}
+
+.exh-detail-header{
+  display: grid;
+  grid-template-columns: 1.2fr .8fr;
+  gap: 1rem;
+  align-items: start;
+}
+
+.exh-detail-title{
+  display: grid;
+  gap: .55rem;
+}
+
+.exh-h2{
+  font-size: clamp(1.2rem, 1.55vw, 1.55rem);
+  line-height: 1.2;
+  letter-spacing: .01em;
+  margin: 0;
+}
+
+.exh-subline{
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+}
+
+.exh-pill{
+  display: inline-flex;
+  align-items: center;
+  padding: .22rem .6rem;
+  border-radius: 999px;
+  font-size: .78rem;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.92);
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.14);
+}
+
+.exh-detail-meta{
+  display: grid;
+  gap: .55rem;
+  padding: .9rem 1rem;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.04);
+}
+
+.exh-metaRow{
+  display: grid;
+  grid-template-columns: 5.5rem 1fr;
+  gap: .75rem;
+  align-items: baseline;
+}
+
+.exh-metaKey{
+  font-size: .78rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  opacity: .72;
+}
+
+.exh-metaVal{
+  color: rgba(255,255,255,.86);
+  line-height: 1.55;
+}
+
+.exh-detail-theme{
+  padding: 1rem 1.1rem;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(0,0,0,.22);
+  color: rgba(255,255,255,.82);
+  line-height: 1.75;
+  white-space: pre-wrap;
+}
+
+.exh-mediaGrid{
+  display: grid;
+  gap: .9rem;
+  grid-template-columns: repeat(12, 1fr);
+}
+
+.exh-media-card{
+  margin: 0;
+  border-radius: 16px;
+  overflow: clip;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.03);
+  box-shadow: 0 10px 26px rgba(0,0,0,.28);
+}
+
+.exh-media-image{
+  grid-column: span 4;
+}
+
+.exh-media-video,
+.exh-media-model{
+  grid-column: span 6;
+}
+
+.exh-media-frame{
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: rgba(0,0,0,.35);
+}
+
+.exh-media-embed{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.exh-media-imageBtn{
+  appearance: none;
+  border: 0;
+  padding: 0;
+  display: block;
+  width: 100%;
+  background: transparent;
+  cursor: zoom-in;
+}
+
+.exh-media-img{
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  display: block;
+  transform: scale(1.01);
+  transition: transform .35s ease, filter .35s ease;
+}
+
+.exh-media-imageBtn:hover .exh-media-img{
+  transform: scale(1.06);
+  filter: saturate(1.08) contrast(1.02);
+}
+
+.exh-media-caption{
+  padding: .7rem .85rem .85rem;
+  font-size: .9rem;
+  color: rgba(255,255,255,.78);
+  line-height: 1.55;
+}
+
+.exh-empty{
+  padding: 1rem 1.1rem;
+  border: 1px dashed rgba(255,255,255,.16);
+  border-radius: 16px;
+  opacity: .78;
+}
+
+/* lightbox */
+.exh-lightbox{
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+}
+
+.exh-lightbox-backdrop{
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,.82);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.exh-lightbox-panel{
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: clamp(1rem, 3vw, 2.2rem);
+}
+
+.exh-lightbox-close{
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.18);
+  background: rgba(255,255,255,.06);
+  color: rgba(255,255,255,.92);
+  font-size: 1.7rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.exh-lightbox-img{
+  width: min(1100px, 92vw);
+  max-height: 82vh;
+  height: auto;
+  object-fit: contain;
+  border-radius: 14px;
+  box-shadow: 0 18px 60px rgba(0,0,0,.55);
+}
+
+@media (max-width: 980px){
+  .exh-detail-header{
+    grid-template-columns: 1fr;
+  }
+
+  .exh-media-image{ grid-column: span 6; }
+  .exh-media-video,
+  .exh-media-model{ grid-column: span 12; }
+}
+
+@media (max-width: 640px){
+  .exhibition-item{ border-radius: 16px; }
+  .exh-mediaGrid{ gap: .75rem; }
+  .exh-media-image{ grid-column: span 12; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .exhibition-banner-bg,
+  .exhibition-detail{
+    transition: none;
+  }
+
+  .exh-media-img{
+    transition: none;
+  }
+}

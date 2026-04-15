@@ -115,6 +115,487 @@ class Work:
         }
 
 
+@dataclass
+class Exhibition:
+    id: str
+    title: str = ""
+    year: str = ""
+    type: str = "group"  # solo/group
+    location: str = ""
+    curator: str = ""
+    theme: str = ""
+    cover: str = ""
+    media: List[Dict[str, Any]] = None
+
+    @staticmethod
+    def from_dict(d: dict) -> "Exhibition":
+        media = d.get("media", [])
+        if not isinstance(media, list):
+            media = []
+        return Exhibition(
+            id=str(d.get("id", "")),
+            title=str(d.get("title", "")),
+            year=str(d.get("year", "")),
+            type=str(d.get("type", "group") or "group"),
+            location=str(d.get("location", "")),
+            curator=str(d.get("curator", "")),
+            theme=str(d.get("theme", "")),
+            cover=str(d.get("cover", "")),
+            media=[m for m in media if isinstance(m, dict)],
+        )
+
+    def to_dict(self) -> dict:
+        return {
+            "id": self.id,
+            "title": self.title,
+            "year": self.year,
+            "type": (self.type or "group").lower(),
+            "location": self.location,
+            "curator": self.curator,
+            "theme": self.theme,
+            "cover": self.cover,
+            "media": self.media if isinstance(self.media, list) else [],
+        }
+
+
+class ExhibitionsManager(tk.Toplevel):
+    def __init__(self, master: "WorksManagerApp"):
+        super().__init__(master)
+        self.master_app = master
+        self.project_dir = master.project_dir
+        self.exhibitions_json_path = self.project_dir / "exhibitions-data" / "exhibitions.json"
+        self.title("Exhibitions Manager (exhibitions-data/exhibitions.json)")
+        self.geometry("1040x700")
+
+        self.exhibitions: List[Exhibition] = []
+        self.current_index: Optional[int] = None
+        self.current_media_index: Optional[int] = None
+        self.media_items: List[Dict[str, Any]] = []
+        self.exhibitions_img_dir = self.project_dir / "img" / "exhibitions"
+
+        self._build_ui()
+        self._load_exhibitions()
+        self._refresh_list()
+
+    def _build_ui(self):
+        self.grid_columnconfigure(0, weight=0)
+        self.grid_columnconfigure(1, weight=1)
+        self.grid_rowconfigure(0, weight=1)
+
+        left = ttk.Frame(self, padding=12)
+        left.grid(row=0, column=0, sticky="ns")
+        ttk.Label(left, text="展览列表", font=("Segoe UI", 11, "bold")).pack(anchor=W)
+
+        self.listbox = tk.Listbox(left, width=40)
+        self.listbox.pack(fill=BOTH, expand=True, pady=(8, 8))
+        self.listbox.bind("<<ListboxSelect>>", self._on_select)
+
+        btn_row = ttk.Frame(left)
+        btn_row.pack(fill="x")
+        ttk.Button(btn_row, text="添加", command=self._on_add).pack(side=LEFT, padx=4)
+        ttk.Button(btn_row, text="删除", command=self._on_delete).pack(side=LEFT, padx=4)
+        ttk.Button(btn_row, text="刷新", command=self._refresh_from_disk).pack(side=LEFT, padx=4)
+
+        right = ttk.Frame(self, padding=12)
+        right.grid(row=0, column=1, sticky="nsew")
+        right.grid_columnconfigure(0, weight=1)
+        right.grid_rowconfigure(0, weight=1)
+
+        editor = ttk.Frame(right)
+        editor.grid(row=0, column=0, sticky="nsew")
+
+        def add_entry(r, label, var, readonly=False):
+            ttk.Label(editor, text=label).grid(row=r, column=0, sticky=W, padx=(0, 10), pady=4)
+            state = "readonly" if readonly else "normal"
+            ttk.Entry(editor, textvariable=var, state=state).grid(row=r, column=1, sticky="ew", pady=4)
+
+        editor.grid_columnconfigure(1, weight=1)
+
+        self.id_var = tk.StringVar(value="")
+        self.title_var = tk.StringVar(value="")
+        self.year_var = tk.StringVar(value="")
+        self.type_var = tk.StringVar(value="group")
+        self.location_var = tk.StringVar(value="")
+        self.curator_var = tk.StringVar(value="")
+        self.cover_var = tk.StringVar(value="")
+
+        add_entry(0, "ID", self.id_var, readonly=True)
+        add_entry(1, "名称", self.title_var)
+        add_entry(2, "年份", self.year_var)
+
+        ttk.Label(editor, text="类型").grid(row=3, column=0, sticky=W, padx=(0, 10), pady=4)
+        ttk.Combobox(editor, textvariable=self.type_var, values=["solo", "group"], state="readonly").grid(
+            row=3, column=1, sticky="ew", pady=4
+        )
+        add_entry(4, "地点", self.location_var)
+        add_entry(5, "策展人", self.curator_var)
+        add_entry(6, "横幅封面cover(相对路径)", self.cover_var)
+
+        ttk.Label(editor, text="主题/展览文字").grid(row=7, column=0, sticky=W, padx=(0, 10), pady=(12, 4))
+        self.theme_text = tk.Text(editor, height=6, wrap="word")
+        self.theme_text.grid(row=7, column=1, sticky="nsew", pady=(12, 4))
+
+        ttk.Label(editor, text="媒体 media[]").grid(row=8, column=0, sticky=W, padx=(0, 10), pady=(12, 6))
+
+        media_wrap = ttk.Frame(editor)
+        media_wrap.grid(row=8, column=1, sticky="nsew", pady=(12, 4))
+        media_wrap.grid_columnconfigure(0, weight=0)
+        media_wrap.grid_columnconfigure(1, weight=1)
+        media_wrap.grid_rowconfigure(0, weight=1)
+
+        # Left: media list + add/delete
+        media_left = ttk.Frame(media_wrap)
+        media_left.grid(row=0, column=0, sticky="ns")
+        ttk.Label(media_left, text="媒体列表").pack(anchor=W)
+        self.media_listbox = tk.Listbox(media_left, width=34)
+        self.media_listbox.pack(fill=BOTH, expand=True, pady=(6, 6))
+        self.media_listbox.bind("<<ListboxSelect>>", self._on_media_select)
+
+        media_btns = ttk.Frame(media_left)
+        media_btns.pack(fill="x")
+        ttk.Button(media_btns, text="添加媒体", command=self._on_media_add).pack(side=LEFT, padx=4)
+        ttk.Button(media_btns, text="删除媒体", command=self._on_media_delete).pack(side=LEFT, padx=4)
+
+        # Right: media editor
+        media_right = ttk.Frame(media_wrap)
+        media_right.grid(row=0, column=1, sticky="nsew", padx=(12, 0))
+        media_right.grid_columnconfigure(1, weight=1)
+
+        self.media_kind_var = tk.StringVar(value="image")
+        self.media_src_var = tk.StringVar(value="")
+        self.media_link_var = tk.StringVar(value="")
+        self.media_poster_var = tk.StringVar(value="")
+        self.media_caption_var = tk.StringVar(value="")
+
+        ttk.Label(media_right, text="类型").grid(row=0, column=0, sticky=W, pady=4)
+        kind_row = ttk.Frame(media_right)
+        kind_row.grid(row=0, column=1, sticky="w", pady=4)
+        for k, label in [("image", "Image"), ("video", "Video"), ("model", "3D Model"), ("web", "Web")]:
+            ttk.Radiobutton(
+                kind_row,
+                text=label,
+                value=k,
+                variable=self.media_kind_var,
+                command=self._on_media_kind_change,
+            ).pack(side=LEFT, padx=(0, 10))
+
+        ttk.Label(media_right, text="caption（一句话简介）").grid(row=1, column=0, sticky=W, pady=4)
+        ttk.Entry(media_right, textvariable=self.media_caption_var).grid(row=1, column=1, sticky="ew", pady=4)
+
+        ttk.Label(media_right, text="src（本地文件/相对路径）").grid(row=2, column=0, sticky=W, pady=4)
+        src_row = ttk.Frame(media_right)
+        src_row.grid(row=2, column=1, sticky="ew", pady=4)
+        src_row.grid_columnconfigure(0, weight=1)
+        ttk.Entry(src_row, textvariable=self.media_src_var).grid(row=0, column=0, sticky="ew")
+        self._media_browse_btn = ttk.Button(src_row, text="浏览…", command=self._on_media_browse)
+        self._media_browse_btn.grid(row=0, column=1, padx=(8, 0))
+
+        ttk.Label(media_right, text="link（外链/Embed）").grid(row=3, column=0, sticky=W, pady=4)
+        ttk.Entry(media_right, textvariable=self.media_link_var).grid(row=3, column=1, sticky="ew", pady=4)
+
+        ttk.Label(media_right, text="poster（可选）").grid(row=4, column=0, sticky=W, pady=4)
+        ttk.Entry(media_right, textvariable=self.media_poster_var).grid(row=4, column=1, sticky="ew", pady=4)
+
+        media_action = ttk.Frame(media_right)
+        media_action.grid(row=5, column=1, sticky="w", pady=(10, 0))
+        ttk.Button(media_action, text="应用到当前媒体项", command=self._on_media_apply).pack(side=LEFT, padx=(0, 8))
+        ttk.Button(media_action, text="向上", command=lambda: self._move_media(-1)).pack(side=LEFT, padx=(0, 8))
+        ttk.Button(media_action, text="向下", command=lambda: self._move_media(1)).pack(side=LEFT)
+
+        editor.grid_rowconfigure(7, weight=0)
+        editor.grid_rowconfigure(8, weight=1)
+        media_right.grid_rowconfigure(6, weight=1)
+
+        action = ttk.Frame(right)
+        action.grid(row=1, column=0, sticky="ew", pady=(10, 0))
+        ttk.Button(action, text="保存当前展览", command=self._on_save).pack(side=LEFT, padx=6)
+        ttk.Button(action, text="提示：刷新 exhibition.html 查看效果", command=self._on_hint).pack(side=LEFT, padx=6)
+
+    def _read(self):
+        raw = _read_json(self.exhibitions_json_path, default=[])
+        if not isinstance(raw, list):
+            raw = []
+        self.exhibitions = [Exhibition.from_dict(d) for d in raw if isinstance(d, dict)]
+
+    def _write(self):
+        _write_json(self.exhibitions_json_path, [e.to_dict() for e in self.exhibitions])
+
+    def _load_exhibitions(self):
+        self._read()
+
+    def _refresh_list(self):
+        self.listbox.delete(0, END)
+        for e in self.exhibitions:
+            label = e.title.strip() or e.id
+            yr = f" ({e.year})" if e.year else ""
+            self.listbox.insert(END, f"{label}{yr}")
+        self.current_index = None
+        self._clear_editor()
+
+    def _clear_editor(self):
+        self.id_var.set("")
+        self.title_var.set("")
+        self.year_var.set("")
+        self.type_var.set("group")
+        self.location_var.set("")
+        self.curator_var.set("")
+        self.cover_var.set("")
+        self.theme_text.delete("1.0", END)
+        self.media_items = []
+        self.current_media_index = None
+        self._refresh_media_list()
+        self._clear_media_editor()
+
+    def _next_id(self) -> str:
+        max_num = 0
+        for e in self.exhibitions:
+            parts = (e.id or "").split("-")
+            if len(parts) == 2 and parts[0] == "exh":
+                try:
+                    max_num = max(max_num, int(parts[1]))
+                except ValueError:
+                    pass
+        return f"exh-{max_num + 1:03d}"
+
+    def _on_add(self):
+        new_id = self._next_id()
+        e = Exhibition(id=new_id, media=[])
+        self.exhibitions.append(e)
+        self._write()
+        self._refresh_from_disk()
+
+        for i, item in enumerate(self.exhibitions):
+            if item.id == new_id:
+                self.listbox.selection_clear(0, END)
+                self.listbox.selection_set(i)
+                self.listbox.activate(i)
+                self.current_index = i
+                self._fill_editor(self.exhibitions[i])
+                break
+
+    def _on_delete(self):
+        if self.current_index is None:
+            messagebox.showwarning("提示", "请先选择要删除的展览。")
+            return
+        e = self.exhibitions[self.current_index]
+        if not messagebox.askyesno("确认删除", f"确定删除《{e.title or e.id}》吗？"):
+            return
+        del self.exhibitions[self.current_index]
+        try:
+            self._write()
+            self._refresh_from_disk()
+            messagebox.showinfo("成功", "已删除并更新 exhibitions.json。")
+        except Exception as ex:
+            messagebox.showerror("错误", f"删除失败：{ex}")
+
+    def _refresh_from_disk(self):
+        try:
+            self._read()
+            self._refresh_list()
+        except Exception as ex:
+            messagebox.showerror("错误", f"加载失败：{ex}")
+
+    def _on_select(self, _evt):
+        sel = self.listbox.curselection()
+        if not sel:
+            return
+        idx = int(sel[0])
+        self.current_index = idx
+        self._fill_editor(self.exhibitions[idx])
+
+    def _fill_editor(self, e: Exhibition):
+        self.id_var.set(e.id)
+        self.title_var.set(e.title)
+        self.year_var.set(e.year)
+        self.type_var.set((e.type or "group").lower())
+        self.location_var.set(e.location)
+        self.curator_var.set(e.curator)
+        self.cover_var.set(e.cover)
+        self.theme_text.delete("1.0", END)
+        self.theme_text.insert("1.0", e.theme or "")
+        self.media_items = [m for m in (e.media or []) if isinstance(m, dict)]
+        self.current_media_index = None
+        self._refresh_media_list()
+        self._clear_media_editor()
+
+    def _media_label(self, m: Dict[str, Any], idx: int) -> str:
+        kind = str(m.get("kind", "image") or "image").lower()
+        caption = str(m.get("caption", "") or "").strip()
+        src = str(m.get("src", "") or "").strip()
+        link = str(m.get("link", "") or "").strip()
+        main = caption or (link or src) or "(empty)"
+        if len(main) > 32:
+            main = main[:32] + "…"
+        return f"{idx + 1:02d}. {kind} · {main}"
+
+    def _refresh_media_list(self):
+        if not hasattr(self, "media_listbox"):
+            return
+        self.media_listbox.delete(0, END)
+        for i, m in enumerate(self.media_items):
+            self.media_listbox.insert(END, self._media_label(m, i))
+
+    def _clear_media_editor(self):
+        self.media_kind_var.set("image")
+        self.media_caption_var.set("")
+        self.media_src_var.set("")
+        self.media_link_var.set("")
+        self.media_poster_var.set("")
+        self._on_media_kind_change()
+
+    def _on_media_select(self, _evt):
+        sel = self.media_listbox.curselection()
+        if not sel:
+            return
+        idx = int(sel[0])
+        self.current_media_index = idx
+        m = self.media_items[idx] if 0 <= idx < len(self.media_items) else {}
+        self.media_kind_var.set(str(m.get("kind", "image") or "image").lower())
+        self.media_caption_var.set(str(m.get("caption", "") or ""))
+        self.media_src_var.set(str(m.get("src", "") or ""))
+        self.media_link_var.set(str(m.get("link", "") or ""))
+        self.media_poster_var.set(str(m.get("poster", "") or ""))
+        self._on_media_kind_change()
+
+    def _on_media_kind_change(self):
+        # For model/web, browsing local files usually doesn't apply.
+        kind = (self.media_kind_var.get() or "image").lower()
+        browse_state = "normal" if kind in {"image", "video"} else "disabled"
+        if hasattr(self, "_media_browse_btn"):
+            self._media_browse_btn.configure(state=browse_state)
+
+    def _on_media_add(self):
+        kind = (self.media_kind_var.get() or "image").lower()
+        m: Dict[str, Any] = {"kind": kind, "caption": "", "src": "", "link": "", "poster": ""}
+        self.media_items.append(m)
+        self._refresh_media_list()
+        idx = len(self.media_items) - 1
+        self.media_listbox.selection_clear(0, END)
+        self.media_listbox.selection_set(idx)
+        self.media_listbox.activate(idx)
+        self.current_media_index = idx
+        self._on_media_select(None)
+
+    def _on_media_delete(self):
+        if self.current_media_index is None:
+            messagebox.showwarning("提示", "请先选择要删除的媒体项。")
+            return
+        idx = self.current_media_index
+        if not (0 <= idx < len(self.media_items)):
+            return
+        del self.media_items[idx]
+        self.current_media_index = None
+        self._refresh_media_list()
+        self._clear_media_editor()
+
+    def _on_media_apply(self):
+        if self.current_media_index is None:
+            messagebox.showwarning("提示", "请先选择一个媒体项再应用。")
+            return
+        idx = self.current_media_index
+        if not (0 <= idx < len(self.media_items)):
+            return
+        kind = (self.media_kind_var.get() or "image").lower()
+        m = self.media_items[idx]
+        m["kind"] = kind
+        caption = self.media_caption_var.get().strip()
+        src = self.media_src_var.get().strip()
+        link = self.media_link_var.get().strip()
+        poster = self.media_poster_var.get().strip()
+
+        # Normalize: for model/web prefer link; for image prefer src.
+        m["caption"] = caption
+        m["src"] = src
+        m["link"] = link
+        if poster:
+            m["poster"] = poster
+        else:
+            m.pop("poster", None)
+
+        # Clean empty keys
+        for k in ["src", "link"]:
+            if not str(m.get(k, "")).strip():
+                m.pop(k, None)
+
+        self._refresh_media_list()
+        self.media_listbox.selection_clear(0, END)
+        self.media_listbox.selection_set(idx)
+
+    def _move_media(self, delta: int):
+        if self.current_media_index is None:
+            return
+        idx = self.current_media_index
+        new_idx = idx + delta
+        if not (0 <= idx < len(self.media_items)) or not (0 <= new_idx < len(self.media_items)):
+            return
+        self.media_items[idx], self.media_items[new_idx] = self.media_items[new_idx], self.media_items[idx]
+        self.current_media_index = new_idx
+        self._refresh_media_list()
+        self.media_listbox.selection_clear(0, END)
+        self.media_listbox.selection_set(new_idx)
+        self.media_listbox.activate(new_idx)
+
+    def _on_media_browse(self):
+        kind = (self.media_kind_var.get() or "image").lower()
+        if kind not in {"image", "video"}:
+            return
+        if self.current_index is None:
+            messagebox.showwarning("提示", "请先选择一个展览（用于生成文件名）。")
+            return
+        exh = self.exhibitions[self.current_index]
+        exh_id = exh.id or "exh"
+
+        if kind == "image":
+            filetypes = [("Image files", "*.png *.jpg *.jpeg *.webp *.gif *.bmp"), ("All files", "*.*")]
+        else:
+            filetypes = [("Video files", "*.mp4 *.webm *.ogg *.mov *.m4v"), ("All files", "*.*")]
+
+        chosen = filedialog.askopenfilename(title="选择媒体文件", filetypes=filetypes)
+        if not chosen:
+            return
+        try:
+            src_path = Path(chosen)
+            if not src_path.exists():
+                return
+            self.exhibitions_img_dir.mkdir(parents=True, exist_ok=True)
+            ext = src_path.suffix.lower() or (".webp" if kind == "image" else ".mp4")
+            # Use index or next sequence to avoid overwriting too often.
+            seq = (self.current_media_index + 1) if self.current_media_index is not None else (len(self.media_items) + 1)
+            dest_name = f"{exh_id}-m{seq:02d}{ext}"
+            dest_abs = self.exhibitions_img_dir / dest_name
+            shutil.copy2(src_path, dest_abs)
+            rel = _to_posix_rel(self.project_dir, dest_abs)
+            self.media_src_var.set(rel)
+        except Exception as ex:
+            messagebox.showerror("错误", f"复制媒体文件失败：{ex}")
+
+    def _on_hint(self):
+        messagebox.showinfo("提示", "保存后请刷新 exhibition.html 查看列表变化。")
+
+    def _on_save(self):
+        if self.current_index is None:
+            messagebox.showwarning("提示", "请先选择或添加展览。")
+            return
+        e = self.exhibitions[self.current_index]
+        e.title = self.title_var.get().strip()
+        e.year = self.year_var.get().strip()
+        e.type = (self.type_var.get().strip().lower() or "group")
+        e.location = self.location_var.get().strip()
+        e.curator = self.curator_var.get().strip()
+        e.cover = self.cover_var.get().strip()
+        e.theme = self.theme_text.get("1.0", END).strip()
+        # Apply the current media editor fields (if any) before saving, but don't force.
+        # Users can keep a partially edited item and apply later.
+        e.media = [m for m in self.media_items if isinstance(m, dict)]
+
+        try:
+            self._write()
+            messagebox.showinfo("成功", "已保存。刷新 exhibition.html 查看效果。")
+            self._refresh_from_disk()
+        except Exception as ex:
+            messagebox.showerror("错误", f"保存失败：{ex}")
+
+
 class WorksManagerApp(tk.Tk):
     def __init__(self):
         super().__init__()
@@ -125,6 +606,7 @@ class WorksManagerApp(tk.Tk):
         self.works_json_path = self.project_dir / "works-data" / "works.json"
         self.filters_json_path = self.project_dir / "works-data" / "filters.json"
         self.works_img_dir = self.project_dir / "img" / "works"
+        self.exhibitions_json_path = self.project_dir / "exhibitions-data" / "exhibitions.json"
         self.field_options = self._load_field_options()
 
         self.works: List[Work] = []
@@ -133,6 +615,16 @@ class WorksManagerApp(tk.Tk):
         self._build_ui()
         self._load_works()
         self._refresh_list()
+
+    def _open_exhibitions_manager(self):
+        # Create file if missing so the manager can open cleanly.
+        if not self.exhibitions_json_path.exists():
+            try:
+                _write_json(self.exhibitions_json_path, [])
+            except Exception as e:
+                messagebox.showerror("错误", f"无法创建 exhibitions.json：{e}")
+                return
+        ExhibitionsManager(self)
 
     def _load_field_options(self) -> Dict[str, List[str]]:
         filters = _read_json(self.filters_json_path, default={})
@@ -291,6 +783,9 @@ class WorksManagerApp(tk.Tk):
         action = ttk.Frame(right)
         action.pack(fill="x", pady=(10, 0))
         ttk.Button(action, text="保存当前作品", command=self._on_save).pack(
+            side=LEFT, padx=6
+        )
+        ttk.Button(action, text="管理展览(exhibitions.json)", command=self._open_exhibitions_manager).pack(
             side=LEFT, padx=6
         )
         ttk.Button(action, text="刷新列表", command=self._refresh_from_disk).pack(

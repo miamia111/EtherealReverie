@@ -1,0 +1,56 @@
+[
+  {
+    "id": "exh-001",
+    "title": "Ethereal Reverie II",
+    "year": "2025. 5.01 ~ 2025. 7.28",
+    "type": "solo",
+    "location": "Juruo Golden Beach Gallery · Quanzhou · China",
+    "curator": "Si Wu",
+    "theme": "Ethereal Reverie II marks my second solo exhibition, set along the breathtaking Golden Coast of Quanzhou. The venue itself feels almost like an extension of the exhibition—a pink, castle-like structure perched by the sea. Through its expansive floor-to-ceiling windows, waves can be seen crashing gently against the building, creating a setting that is both intimate and romantic.\n\nThe building’s soft palette and cinematic atmosphere inevitably call to mind the visual language of Wes Anderson. I was instantly drawn to it at first sight; its dreamlike quality resonates deeply with the spirit of Ethereal Reverie.\n\nThis exhibition presents a total of sixteen works, including Mother of Universe, alongside several additional realist oil paintings that were not part of the original Ethereal Reverie series. Together, they form a dialogue between the imagined and the observed, expanding the narrative of the series into a broader emotional and visual landscape.",
+    "cover": "img/Hmwork/Ex1.webp",
+    "media": [
+      {
+        "kind": "image",
+        "src": "img/exhibitions/exh-001-m01.webp",
+        "caption": ""
+      },
+      {
+        "kind": "image",
+        "caption": "外链视频一句话简介（YouTube/Vimeo 等会自动转 embed）。",
+        "src": "img/exhibitions/exh-001-m02.webp"
+      },
+      {
+        "kind": "image",
+        "caption": "",
+        "src": "img/exhibitions/exh-001-m05.webp"
+      },
+      {
+        "kind": "image",
+        "caption": "3D 模型外链一句话简介（建议使用 embed 链接）。",
+        "src": "img/exhibitions/exh-001-m03.webp"
+      },
+      {
+        "kind": "image",
+        "caption": "",
+        "src": "img/exhibitions/exh-001-m04.webp"
+      }
+    ]
+  },
+  {
+    "id": "exh-002",
+    "title": "Ethereal Reverie",
+    "year": "2024.11.16 ~ 2024. 11.24",
+    "type": "solo",
+    "location": "ZhongHuaErNu Gallery · Xiamen,China",
+    "curator": "Si Wu",
+    "theme": "主题描述……",
+    "cover": "img/works/work-006.jpg",
+    "media": [
+      {
+        "kind": "image",
+        "src": "img/works/work-006.jpg",
+        "caption": "图片一句话简介。"
+      }
+    ]
+  }
+]
