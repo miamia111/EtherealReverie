@@ -1,29 +1,20 @@
 [
   {
     "id": "news-001",
-    "date": "AUG 12, 2024",
-    "title": "Studio Visit: The Red Thread",
-    "description": "Progress update on the new series.",
-    "image": "img/NewsFeed/newstop.webp",
+    "date": "MAR 29, 2026",
+    "title": "Studio Visit: Angela Lyn on Gulangyu",
+    "description": "I recently documented a moving performance by British-Xiamen artist Angela Lyn on Gulangyu Island.Witnessing her explore her ancestral roots through art was deeply profound.",
+    "image": "img/NewsFeed/news-001.webp",
     "link": "",
     "style": "featured"
   },
   {
     "id": "news-002",
     "date": "10.25",
-    "title": "Upcoming: Shanghai Art Fair",
+    "title": "Latest Work : Circe",
     "description": "",
-    "image": "img/NewsFeed/newstop.webp",
-    "link": "https://example.com",
+    "image": "img/NewsFeed/news-002.webp",
+    "link": "https://www.xiaohongshu.com/discovery/item/69d461b1000000001d01da2d?source=webshare&xhsshare=pc_web&xsec_token=AB6BCuDIfEnjeYB57-pFzsRXksDMeTmI-1Q44YrfhK_2k=&xsec_source=pc_share",
     "style": "featured"
-  },
-  {
-    "id": "news-003",
-    "date": "11.02",
-    "title": "New Series: Female Divinity",
-    "description": "",
-    "image": "",
-    "link": "",
-    "style": "text"
   }
 ]
