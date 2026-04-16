@@ -16,6 +16,8 @@ let activeCard = null
 let activeMediaElement = null
 let openTl = null
 let closeTl = null
+const initialWorkId = new URLSearchParams(window.location.search).get("id")
+let hasTriedOpenFromUrl = false
 
 function normalizeFilterValue(value){
   if(value == null) return ""
@@ -286,6 +288,37 @@ function renderWorks(list){
     card.addEventListener("click",()=>openAnimation(work, card))
     worksGrid.appendChild(card)
   })
+
+  tryOpenWorkFromUrl(list)
+}
+
+function tryOpenWorkFromUrl(list){
+  if(hasTriedOpenFromUrl || !initialWorkId || !Array.isArray(list) || list.length === 0){
+    return
+  }
+
+  const targetIndex = list.findIndex((work)=>String(work?.id) === String(initialWorkId))
+  if(targetIndex === -1){
+    return
+  }
+
+  hasTriedOpenFromUrl = true
+  const targetCard = worksGrid.children[targetIndex]
+  if(targetCard instanceof HTMLElement){
+    requestAnimationFrame(()=>{
+      openAnimation(list[targetIndex], targetCard)
+      clearWorkIdFromUrl()
+    })
+  }
+}
+
+function clearWorkIdFromUrl(){
+  const url = new URL(window.location.href)
+  if(!url.searchParams.has("id")) return
+  url.searchParams.delete("id")
+  const nextSearch = url.searchParams.toString()
+  const nextUrl = `${url.pathname}${nextSearch ? `?${nextSearch}` : ""}${url.hash}`
+  window.history.replaceState({}, "", nextUrl)
 }
 
 function setMetaText(id, value, prefix = ""){
