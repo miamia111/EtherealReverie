@@ -81,95 +81,6 @@
     }
   },
   {
-    "id": "work-005",
-    "title": "多条媒体测试",
-    "year": "",
-    "type": "sculpture",
-    "series": "",
-    "medium": "",
-    "size": "",
-    "thumbnail": "img/works/work-005.png",
-    "image": "img/works/work-005.png",
-    "description": "单作品编辑区改为 媒体列表（与展览页类似）：\n添加 / 删除 / 排序\n每项可设：内容类型、src、poster、link、3D 格式\n图片 / 视频 / 音频支持 浏览本地文件（复制到 img/works/，命名如 work-001-m01.webp）",
-    "createdAt": "",
-    "media": [
-      {
-        "kind": "image",
-        "src": "img/works/work-009-m02.webp",
-        "poster": "img/works/work-009-m02.webp"
-      },
-      {
-        "kind": "model",
-        "link": "https://sketchfab.com/3d-models/a8122b3c2dd24192bd571ab0b5f412bc/embed"
-      },
-      {
-        "kind": "video",
-        "src": "video/works/lv_7355.webm"
-      }
-    ],
-    "content": {
-      "kind": "image",
-      "src": "img/works/work-009-m02.webp",
-      "poster": "img/works/work-009-m02.webp",
-      "link": "",
-      "modelFormat": ""
-    }
-  },
-  {
-    "id": "work-006",
-    "title": "Organic Pulse",
-    "year": "2024",
-    "type": "painting",
-    "series": "quantum-refraction",
-    "medium": "",
-    "size": "",
-    "thumbnail": "img/works/work-006.jpg",
-    "image": "img/works/work-006.jpg",
-    "description": "",
-    "createdAt": "",
-    "media": [
-      {
-        "kind": "image",
-        "src": "img/works/work-006.jpg",
-        "poster": "img/works/work-006.jpg"
-      }
-    ],
-    "content": {
-      "kind": "image",
-      "src": "img/works/work-006.jpg",
-      "poster": "img/works/work-006.jpg",
-      "link": "",
-      "modelFormat": ""
-    }
-  },
-  {
-    "id": "work-007",
-    "title": "Chadra",
-    "year": "2025",
-    "type": "mixed-media",
-    "series": "",
-    "medium": "",
-    "size": "",
-    "thumbnail": "img/works/work-007.png",
-    "image": "img/works/work-007.png",
-    "description": "",
-    "createdAt": "",
-    "media": [
-      {
-        "kind": "image",
-        "src": "img/works/work-007.png",
-        "poster": "img/works/work-007.png"
-      }
-    ],
-    "content": {
-      "kind": "image",
-      "src": "img/works/work-007.png",
-      "poster": "img/works/work-007.png",
-      "link": "",
-      "modelFormat": ""
-    }
-  },
-  {
     "id": "work-008",
     "title": "内视频测试",
     "year": "2026",
@@ -197,6 +108,37 @@
     }
   },
   {
+    "id": "work-010",
+    "title": "排序测试",
+    "year": "2026",
+    "type": "painting",
+    "series": "",
+    "medium": "",
+    "size": "",
+    "thumbnail": "img/works/work-009.png",
+    "image": "img/works/work-009.png",
+    "description": "",
+    "createdAt": "2026-05-18T02:37:58+00:00",
+    "media": [
+      {
+        "kind": "image",
+        "src": "img/works/work-009.png",
+        "poster": "img/works/work-009.png"
+      },
+      {
+        "kind": "image",
+        "src": "img/works/work-008.jpg"
+      }
+    ],
+    "content": {
+      "kind": "image",
+      "src": "img/works/work-009.png",
+      "poster": "img/works/work-009.png",
+      "link": "",
+      "modelFormat": ""
+    }
+  },
+  {
     "id": "work-009",
     "title": "多条媒体测试",
     "year": "",
@@ -211,7 +153,7 @@
     "media": [
       {
         "kind": "image",
-        "src": "img/works/work-009-m02.webp",
+        "src": "img/works/work-009.webp",
         "poster": "img/works/work-009-m02.webp"
       },
       {
@@ -220,12 +162,12 @@
       },
       {
         "kind": "video",
-        "src": "video/works/lv_7355.webm"
+        "src": "video/works/MOVI0093.webm"
       }
     ],
     "content": {
       "kind": "image",
-      "src": "img/works/work-009-m02.webp",
+      "src": "img/works/work-009.webp",
       "poster": "img/works/work-009-m02.webp",
       "link": "",
       "modelFormat": ""
