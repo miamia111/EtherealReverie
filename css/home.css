@@ -31,6 +31,8 @@ main,
 .content-left {
   flex: 7.5; /* 占据 70% */
   min-width: 0; /* 防止内容撑破 flex 容器 */
+  display: flex;
+  flex-direction: column;
 }
 
 /* 重新微调 Hero，因为现在它只在 70% 的宽度里 */
@@ -111,6 +113,7 @@ main,
   grid-template-columns: 1fr 1fr; /* 展览等宽作品网格 */
   gap: 30px;
   align-items: stretch; /* 两列等高，便于右侧 WORKS 区 height:100% */
+  flex: 1 1 auto;
 }
 
 .grid-item:nth-child(even) {
@@ -260,46 +263,63 @@ main,
   aspect-ratio: 3 / 8;  /* 锁定竖图比例 */
 }
 
-/* 1. 侧边栏容器：必须是 relative，作为定位基准 */
+/* 1. 侧边栏：与左侧 content-left 等高，底部齐平 */
 .news-sidebar {
   position: sticky;
-  top: 0px;
+  top: 0;
   flex: 2.5;
   min-width: 0;
   width: min(100%, 420px);
-  min-height: 100%;
-  height: auto;
+  align-self: stretch;
   display: flex;
   flex-direction: column;
+  min-height: 0;
 }
 
-/* 2. 新闻区：展开时会向下覆盖 */
+/* 2. 新闻区：固定高度铺满侧栏，内容区内部滚动 */
 .news-sticky-content {
-  background: rgba(20, 15, 35, 0.85); /* 稍微调高不透明度，确保盖住下方时不乱 */
+  background: rgba(20, 15, 35, 0.85);
   backdrop-filter: blur(15px);
   padding: 2rem;
   border-radius: 16px;
   border: 1px solid rgba(255, 255, 255, 0.08);
   position: relative;
-  z-index: 10; /* 确保层级在 Socials 之上 */
-  max-height: 360px; /* 初始对齐高度 */
-  overflow: hidden;
-  transition: max-height 0.5s ease;
+  z-index: 10;
   min-width: 0;
+  flex: 1 1 auto;
+  min-height: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
-.news-sticky-content:hover {
-  max-height: 800px; /* 展开高度：现在它会向下盖住 Socials */
-  mask-image: none;
-  -webkit-mask-image: none;
-  overflow-y: hidden;
-}
 .news-header {
+  flex: 0 0 auto;
   font-size: 1.2rem;
   letter-spacing: 0.1em;
-  margin-bottom: 2rem;
+  margin-bottom: 1.25rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   padding-bottom: 0.5rem;
+}
+
+#news-feed-list {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 6px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.28) transparent;
+}
+
+#news-feed-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+#news-feed-list::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.28);
+  border-radius: 3px;
 }
 
 .news-item {
@@ -381,6 +401,16 @@ main,
   .news-sidebar {
       position: static; /* 手机端取消固定 */
       width: 100%;
+      min-height: auto;
+  }
+
+  .news-sticky-content {
+      height: auto;
+      max-height: none;
+  }
+
+  #news-feed-list {
+      max-height: 60vh;
   }
   
   .grid-item:nth-child(even) {

@@ -16,5 +16,14 @@
     "image": "img/NewsFeed/news-002.webp",
     "link": "https://www.xiaohongshu.com/discovery/item/69d461b1000000001d01da2d?source=webshare&xhsshare=pc_web&xsec_token=AB6BCuDIfEnjeYB57-pFzsRXksDMeTmI-1Q44YrfhK_2k=&xsec_source=pc_share",
     "style": "featured"
+  },
+  {
+    "id": "news-003",
+    "date": "04.26",
+    "title": "Work Exploded",
+    "description": "",
+    "image": "img/NewsFeed/news-003.webp",
+    "link": "https://www.xiaohongshu.com/discovery/item/69eb34570000000012012801?source=webshare&xhsshare=pc_web&xsec_token=ABPAyi5XPxTxuQtDb3JA2lMWc0mZ3gm66moKGKpSpVB5I=&xsec_source=pc_share",
+    "style": "featured"
   }
 ]

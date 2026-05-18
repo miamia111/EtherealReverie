@@ -1,9 +1,11 @@
 import json
+import re
 import shutil
 import sys
 from dataclasses import dataclass, field
+from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Set, Tuple
 from tkinter import BOTH, END, LEFT, W, filedialog, messagebox
 import tkinter as tk
 from tkinter import ttk
@@ -15,6 +17,66 @@ def _config_path() -> Path:
 
 def _to_posix_rel(project_dir: Path, abs_path: Path) -> str:
     return abs_path.relative_to(project_dir).as_posix()
+
+
+def _is_local_asset_path(rel: str) -> bool:
+    rel = (rel or "").strip()
+    if not rel:
+        return False
+    lower = rel.lower()
+    return not (lower.startswith("http://") or lower.startswith("https://"))
+
+
+def _normalize_rel_path(rel: str) -> str:
+    return Path(rel.replace("\\", "/")).as_posix()
+
+
+def _paths_from_work(w: "Work") -> List[str]:
+    paths: List[str] = []
+    for rel in (w.image, w.thumbnail):
+        if _is_local_asset_path(str(rel or "")):
+            paths.append(_normalize_rel_path(str(rel).strip()))
+    for m in w.media_items:
+        if not isinstance(m, dict):
+            continue
+        for key in ("src", "poster"):
+            rel = str(m.get(key, "") or "").strip()
+            if _is_local_asset_path(rel):
+                paths.append(_normalize_rel_path(rel))
+    return paths
+
+
+def _iter_work_asset_paths(works: List["Work"]) -> Set[str]:
+    out: Set[str] = set()
+    for w in works:
+        out.update(_paths_from_work(w))
+    return out
+
+
+def _resolve_import_path(project_dir: Path, src: Path, dest_dir: Path, dest_filename: str) -> str:
+    project_dir = project_dir.resolve()
+    src = src.resolve()
+    try:
+        return src.relative_to(project_dir).as_posix()
+    except ValueError:
+        pass
+
+    dest_dir.mkdir(parents=True, exist_ok=True)
+    dest = dest_dir / dest_filename
+    if dest.exists():
+        try:
+            if dest.resolve() == src:
+                return _to_posix_rel(project_dir, dest)
+        except OSError:
+            pass
+        stem = dest.stem
+        ext = dest.suffix
+        n = 1
+        while dest.exists():
+            dest = dest_dir / f"{stem}-{n}{ext}"
+            n += 1
+    shutil.copy2(src, dest)
+    return _to_posix_rel(project_dir, dest)
 
 
 def _read_json(path: Path, default):
@@ -35,6 +97,34 @@ def _write_json(path: Path, data) -> None:
     tmp.replace(path)
 
 
+def _normalize_media_item(raw: dict) -> Dict[str, Any]:
+    if not isinstance(raw, dict):
+        return {"kind": "image", "src": ""}
+    out: Dict[str, Any] = {"kind": str(raw.get("kind", "image") or "image").strip().lower() or "image"}
+    for key in ("src", "poster", "link", "modelFormat", "caption"):
+        val = raw.get(key)
+        if val is not None and str(val).strip():
+            out[key] = str(val).strip()
+    return out
+
+
+def _work_id_number(work_id: str) -> int:
+    parts = (work_id or "").split("-")
+    if len(parts) == 2 and parts[0] == "work":
+        try:
+            return int(parts[1])
+        except ValueError:
+            pass
+    return 999999
+
+
+def _work_year_sort_key(year: str) -> Tuple[int, int]:
+    match = re.search(r"\d{4}", year or "")
+    if match:
+        return (0, int(match.group()))
+    return (1, 0)
+
+
 @dataclass
 class Work:
     id: str
@@ -47,15 +137,18 @@ class Work:
     thumbnail: str = ""
     image: str = ""
     description: str = ""
-    content_kind: str = "image"
-    content_src: str = ""
-    content_poster: str = ""
-    content_link: str = ""
-    content_model_format: str = ""
+    created_at: str = ""
+    media_items: List[Dict[str, Any]] = field(default_factory=list)
 
     @staticmethod
     def from_dict(d: dict) -> "Work":
-        content = d.get("content", {}) if isinstance(d.get("content"), dict) else {}
+        media_raw = d.get("media", [])
+        if isinstance(media_raw, list) and media_raw:
+            media = [_normalize_media_item(m) for m in media_raw if isinstance(m, dict)]
+        else:
+            content = d.get("content", {}) if isinstance(d.get("content"), dict) else {}
+            media = [_normalize_media_item(content)] if content else []
+        first = media[0] if media else {}
         return Work(
             id=str(d.get("id", "")),
             title=str(d.get("title", "")),
@@ -64,17 +157,18 @@ class Work:
             series=str(d.get("series", "")),
             medium=str(d.get("medium", "")),
             size=str(d.get("size", "")),
-            thumbnail=str(d.get("thumbnail", "")),
-            image=str(d.get("image", "")),
+            thumbnail=str(d.get("thumbnail", first.get("poster", ""))),
+            image=str(d.get("image", first.get("src", ""))),
             description=str(d.get("description", "")),
-            content_kind=str(content.get("kind", "image") or "image"),
-            content_src=str(content.get("src", d.get("image", ""))),
-            content_poster=str(content.get("poster", d.get("thumbnail", ""))),
-            content_link=str(content.get("link", "")),
-            content_model_format=str(content.get("modelFormat", "")),
+            created_at=str(d.get("createdAt", d.get("created_at", ""))),
+            media_items=media,
         )
 
     def to_dict(self) -> dict:
+        media = [_normalize_media_item(m) for m in self.media_items if isinstance(m, dict)]
+        first = media[0] if media else {}
+        thumb = self.thumbnail or str(first.get("poster", "") or first.get("src", ""))
+        img = self.image or str(first.get("src", ""))
         return {
             "id": self.id,
             "title": self.title,
@@ -83,15 +177,17 @@ class Work:
             "series": self.series,
             "medium": self.medium,
             "size": self.size,
-            "thumbnail": self.thumbnail,
-            "image": self.image,
+            "thumbnail": thumb,
+            "image": img,
             "description": self.description,
+            "createdAt": self.created_at,
+            "media": media,
             "content": {
-                "kind": self.content_kind or "image",
-                "src": self.content_src or self.image,
-                "poster": self.content_poster or self.thumbnail,
-                "link": self.content_link,
-                "modelFormat": self.content_model_format,
+                "kind": str(first.get("kind", "image") or "image"),
+                "src": str(first.get("src", img)),
+                "poster": str(first.get("poster", thumb)),
+                "link": str(first.get("link", "")),
+                "modelFormat": str(first.get("modelFormat", "")),
             },
         }
 
@@ -179,6 +275,10 @@ class WorksTab(ttk.Frame):
         self.app = app
         self.works: List[Work] = []
         self.current_index: Optional[int] = None
+        self.current_media_index: Optional[int] = None
+        self.media_items: List[Dict[str, Any]] = []
+        self._loading_selection = False
+        self._suppress_listbox = False
         self._build_ui()
         self._load_works()
         self._refresh_list()
@@ -192,7 +292,7 @@ class WorksTab(ttk.Frame):
         left.grid(row=0, column=0, sticky="ns")
         ttk.Label(left, text="作品列表", font=("Segoe UI", 11, "bold")).pack(anchor=W)
 
-        self.listbox = tk.Listbox(left, width=38)
+        self.listbox = tk.Listbox(left, width=38, exportselection=False)
         self.listbox.pack(fill=BOTH, expand=True, pady=(8, 8))
         self.listbox.bind("<<ListboxSelect>>", self._on_select)
 
@@ -200,8 +300,26 @@ class WorksTab(ttk.Frame):
         btn_row.pack(fill="x")
         ttk.Button(btn_row, text="添加", command=self._on_add).pack(side=LEFT, padx=4)
         ttk.Button(btn_row, text="删除", command=self._on_delete).pack(side=LEFT, padx=4)
+
+        order_row = ttk.Frame(left)
+        order_row.pack(fill="x", pady=(6, 0))
+        ttk.Button(order_row, text="向上", command=lambda: self._move_work(-1)).pack(side=LEFT, padx=4)
+        ttk.Button(order_row, text="向下", command=lambda: self._move_work(1)).pack(side=LEFT, padx=4)
+        self.sort_mode_var = tk.StringVar(value="按名称")
+        sort_combo = ttk.Combobox(
+            order_row,
+            textvariable=self.sort_mode_var,
+            values=["按名称", "按年份", "按添加时间"],
+            state="readonly",
+            width=10,
+        )
+        sort_combo.pack(side=LEFT, padx=(8, 4))
+        ttk.Button(order_row, text="应用排序", command=self._apply_sort).pack(side=LEFT, padx=4)
+
         self.delete_images_var = tk.BooleanVar(value=True)
-        ttk.Checkbutton(left, text="删除对应图片文件", variable=self.delete_images_var).pack(anchor=W, pady=(8, 0))
+        ttk.Checkbutton(
+            left, text="删除时清理未引用的本地媒体文件", variable=self.delete_images_var
+        ).pack(anchor=W, pady=(8, 0))
 
         right = ttk.Frame(self, padding=12)
         right.grid(row=0, column=1, sticky="nsew")
@@ -219,17 +337,17 @@ class WorksTab(ttk.Frame):
         self.series_var = tk.StringVar(value="")
         self.medium_var = tk.StringVar(value="")
         self.size_var = tk.StringVar(value="")
-        self.content_kind_var = tk.StringVar(value="image")
-        self.content_src_var = tk.StringVar(value="")
-        self.content_poster_var = tk.StringVar(value="")
-        self.content_link_var = tk.StringVar(value="")
-        self.content_model_format_var = tk.StringVar(value="")
+        self.media_kind_var = tk.StringVar(value="image")
+        self.media_src_var = tk.StringVar(value="")
+        self.media_poster_var = tk.StringVar(value="")
+        self.media_link_var = tk.StringVar(value="")
+        self.media_model_format_var = tk.StringVar(value="")
 
         ttk.Label(editor, text="ID").grid(row=0, column=0, sticky=W, padx=(0, 10))
         ttk.Entry(editor, textvariable=self.id_var, state="readonly").grid(row=0, column=1, sticky="ew")
-        ttk.Label(editor, text="图片").grid(row=0, column=2, sticky=W, padx=(20, 10))
+        ttk.Label(editor, text="列表封面").grid(row=0, column=2, sticky=W, padx=(20, 10))
         ttk.Entry(editor, textvariable=self.image_var, state="readonly").grid(row=0, column=3, sticky="ew")
-        ttk.Button(editor, text="选择图片", command=self._on_pick_image).grid(row=0, column=4, sticky="e")
+        ttk.Button(editor, text="选择封面图", command=self._on_pick_image).grid(row=0, column=4, sticky="e")
 
         def add_entry(r, label, var):
             ttk.Label(editor, text=label).grid(row=r, column=0, sticky=W, padx=(0, 10))
@@ -248,20 +366,71 @@ class WorksTab(ttk.Frame):
         add_select(4, "系列", self.series_var, self.app.field_options["series"])
         add_entry(5, "媒介", self.medium_var)
         add_entry(6, "尺寸(可选)", self.size_var)
-        add_select(7, "内容类型", self.content_kind_var, self.app.field_options["content_kind"])
-        add_entry(8, "内容源src", self.content_src_var)
-        add_entry(9, "封面poster(可选)", self.content_poster_var)
-        add_entry(10, "网页/3D链接link(可选)", self.content_link_var)
-        add_entry(11, "3D格式(modelFormat, 可选)", self.content_model_format_var)
 
-        ttk.Label(editor, text="文本描述").grid(row=12, column=0, sticky=W, padx=(0, 10), pady=(12, 0))
-        self.desc_text = tk.Text(editor, height=10, wrap="word")
-        self.desc_text.grid(row=12, column=1, columnspan=4, sticky="nsew", pady=(12, 0))
-        editor.grid_rowconfigure(12, weight=1)
+        ttk.Label(editor, text="媒体列表").grid(row=7, column=0, sticky=W, padx=(0, 10), pady=(12, 4))
+        media_wrap = ttk.Frame(editor)
+        media_wrap.grid(row=7, column=1, columnspan=4, sticky="nsew", pady=(12, 4))
+        media_wrap.grid_columnconfigure(1, weight=1)
+
+        left_m = ttk.Frame(media_wrap)
+        left_m.grid(row=0, column=0, sticky="ns")
+        self.media_listbox = tk.Listbox(left_m, width=34, height=8)
+        self.media_listbox.pack(fill=BOTH, expand=True, pady=(0, 6))
+        self.media_listbox.bind("<<ListboxSelect>>", self._on_media_select)
+        mrow = ttk.Frame(left_m)
+        mrow.pack(fill="x")
+        ttk.Button(mrow, text="添加媒体", command=self._on_media_add).pack(side=LEFT, padx=4)
+        ttk.Button(mrow, text="删除媒体", command=self._on_media_delete).pack(side=LEFT, padx=4)
+
+        right_m = ttk.Frame(media_wrap)
+        right_m.grid(row=0, column=1, sticky="nsew", padx=(10, 0))
+        right_m.grid_columnconfigure(1, weight=1)
+        ttk.Label(right_m, text="内容类型").grid(row=0, column=0, sticky=W, pady=4)
+        kind_row = ttk.Frame(right_m)
+        kind_row.grid(row=0, column=1, sticky="w", pady=4)
+        kind_values = self.app.field_options.get("content_kind", ["image", "video", "audio", "web", "model"])
+        for k, lbl in [
+            ("image", "图片"),
+            ("video", "视频"),
+            ("audio", "音频"),
+            ("model", "3D"),
+            ("web", "网页"),
+        ]:
+            if k in kind_values:
+                ttk.Radiobutton(
+                    kind_row,
+                    text=lbl,
+                    value=k,
+                    variable=self.media_kind_var,
+                    command=self._on_media_kind_change,
+                ).pack(side=LEFT, padx=(0, 8))
+        ttk.Label(right_m, text="内容源 src").grid(row=1, column=0, sticky=W, pady=4)
+        src_row = ttk.Frame(right_m)
+        src_row.grid(row=1, column=1, sticky="ew", pady=4)
+        src_row.grid_columnconfigure(0, weight=1)
+        ttk.Entry(src_row, textvariable=self.media_src_var).grid(row=0, column=0, sticky="ew")
+        self.media_browse_btn = ttk.Button(src_row, text="浏览…", command=self._on_media_browse)
+        self.media_browse_btn.grid(row=0, column=1, padx=(8, 0))
+        ttk.Label(right_m, text="封面 poster").grid(row=2, column=0, sticky=W, pady=4)
+        ttk.Entry(right_m, textvariable=self.media_poster_var).grid(row=2, column=1, sticky="ew", pady=4)
+        ttk.Label(right_m, text="链接 link").grid(row=3, column=0, sticky=W, pady=4)
+        ttk.Entry(right_m, textvariable=self.media_link_var).grid(row=3, column=1, sticky="ew", pady=4)
+        ttk.Label(right_m, text="3D格式").grid(row=4, column=0, sticky=W, pady=4)
+        ttk.Entry(right_m, textvariable=self.media_model_format_var).grid(row=4, column=1, sticky="ew", pady=4)
+        arow = ttk.Frame(right_m)
+        arow.grid(row=5, column=1, sticky="w", pady=(8, 0))
+        ttk.Button(arow, text="向上", command=lambda: self._move_media(-1)).pack(side=LEFT, padx=(0, 8))
+        ttk.Button(arow, text="向下", command=lambda: self._move_media(1)).pack(side=LEFT)
+
+        ttk.Label(editor, text="文本描述").grid(row=8, column=0, sticky=W, padx=(0, 10), pady=(12, 0))
+        self.desc_text = tk.Text(editor, height=8, wrap="word")
+        self.desc_text.grid(row=8, column=1, columnspan=4, sticky="nsew", pady=(12, 0))
+        editor.grid_rowconfigure(7, weight=1)
+        editor.grid_rowconfigure(8, weight=1)
 
         action = ttk.Frame(right)
         action.pack(fill="x", pady=(10, 0))
-        ttk.Button(action, text="保存当前作品", command=self._on_save).pack(side=LEFT, padx=6)
+        ttk.Button(action, text="保存当前作品", command=lambda: self._persist(silent=False)).pack(side=LEFT, padx=6)
         ttk.Button(action, text="刷新列表", command=self._refresh_from_disk).pack(side=LEFT, padx=6)
         ttk.Button(action, text="编辑筛选字段(filters.json)", command=self.app._on_edit_filters).pack(side=LEFT, padx=6)
 
@@ -272,14 +441,124 @@ class WorksTab(ttk.Frame):
     def _save_works(self):
         _write_json(self.app.works_json_path, [w.to_dict() for w in self.works])
 
-    def _refresh_list(self):
+    def _autosave_if_needed(self) -> None:
+        if self.app.auto_save_var.get():
+            self._persist(silent=True)
+
+    def _persist(self, silent: bool = False) -> None:
+        preserve_id: Optional[str] = None
+        if self.current_index is not None and 0 <= self.current_index < len(self.works):
+            self._sync_work_from_editor()
+            preserve_id = self.works[self.current_index].id
+        self._save_works()
+        if preserve_id:
+            self._refresh_list(preserve_id=preserve_id)
+            idx = self._find_work_index_by_id(preserve_id)
+            if idx is not None:
+                self._load_work_into_editor(idx)
+        if not silent:
+            messagebox.showinfo("成功", "已保存 works.json。")
+
+    def _work_list_label(self, w: Work) -> str:
+        label = w.title.strip() or w.id
+        yr = f" ({w.year})" if w.year else ""
+        return f"{label}{yr}"
+
+    def _find_work_index_by_id(self, work_id: str) -> Optional[int]:
+        for i, w in enumerate(self.works):
+            if w.id == work_id:
+                return i
+        return None
+
+    def _media_form_dict(self) -> Dict[str, Any]:
+        m: Dict[str, Any] = {"kind": self.media_kind_var.get().strip().lower() or "image"}
+        src = self.media_src_var.get().strip()
+        poster = self.media_poster_var.get().strip()
+        link = self.media_link_var.get().strip()
+        model_format = self.media_model_format_var.get().strip()
+        if src:
+            m["src"] = src
+        if poster:
+            m["poster"] = poster
+        if link:
+            m["link"] = link
+        if model_format:
+            m["modelFormat"] = model_format
+        return m
+
+    def _commit_media_form(self) -> None:
+        if self.current_media_index is None:
+            return
+        if not (0 <= self.current_media_index < len(self.media_items)):
+            return
+        self.media_items[self.current_media_index] = _normalize_media_item(self._media_form_dict())
+        idx = self.current_media_index
+        self._refresh_media_list()
+        self.media_listbox.selection_set(idx)
+
+    def _sync_work_from_editor(self) -> None:
+        if self.current_index is None:
+            return
+        self._commit_media_form()
+        w = self.works[self.current_index]
+        w.title = self.title_var.get().strip()
+        w.year = self.year_var.get().strip()
+        w.type = self.type_var.get().strip()
+        w.series = self.series_var.get().strip()
+        w.medium = self.medium_var.get().strip()
+        w.size = self.size_var.get().strip()
+        w.description = self.desc_text.get("1.0", END).strip()
+        w.media_items = [_normalize_media_item(m) for m in self.media_items if isinstance(m, dict)]
+        if w.media_items:
+            first = w.media_items[0]
+            if not w.image:
+                w.image = str(first.get("src", "") or first.get("poster", ""))
+            if not w.thumbnail:
+                w.thumbnail = str(first.get("poster", "") or first.get("src", ""))
+
+    def _refresh_list(self, preserve_id: Optional[str] = None, clear_if_unresolved: bool = True) -> None:
+        if preserve_id is None and self.current_index is not None and 0 <= self.current_index < len(self.works):
+            preserve_id = self.works[self.current_index].id
+        self._suppress_listbox = True
         self.listbox.delete(0, END)
         for w in self.works:
-            label = w.title.strip() or w.id
-            yr = f" ({w.year})" if w.year else ""
-            self.listbox.insert(END, f"{label}{yr}")
-        self.current_index = None
-        self._clear_editor()
+            self.listbox.insert(END, self._work_list_label(w))
+        self._suppress_listbox = False
+        if preserve_id:
+            idx = self._find_work_index_by_id(preserve_id)
+            if idx is not None:
+                self.current_index = idx
+                self._suppress_listbox = True
+                self.listbox.selection_set(idx)
+                self.listbox.see(idx)
+                self.listbox.activate(idx)
+                self._suppress_listbox = False
+                return
+        if clear_if_unresolved:
+            self.current_index = None
+            self._clear_editor()
+
+    def _load_work_into_editor(self, index: int) -> None:
+        if not (0 <= index < len(self.works)):
+            return
+        self._loading_selection = True
+        self.current_index = index
+        w = self.works[index]
+        self.id_var.set(w.id)
+        self.image_var.set(w.image)
+        self.title_var.set(w.title)
+        self.year_var.set(w.year)
+        self.type_var.set(w.type)
+        self.series_var.set(w.series)
+        self.medium_var.set(w.medium)
+        self.size_var.set(w.size)
+        self.media_items = [dict(m) for m in (w.media_items or []) if isinstance(m, dict)]
+        self.current_media_index = None
+        self._refresh_media_list()
+        self._clear_media_form()
+        self.desc_text.delete("1.0", END)
+        self.desc_text.insert("1.0", w.description)
+        self._loading_selection = False
 
     def _clear_editor(self):
         self.id_var.set("")
@@ -290,34 +569,209 @@ class WorksTab(ttk.Frame):
         self.series_var.set("")
         self.medium_var.set("")
         self.size_var.set("")
-        self.content_kind_var.set("image")
-        self.content_src_var.set("")
-        self.content_poster_var.set("")
-        self.content_link_var.set("")
-        self.content_model_format_var.set("")
+        self.media_items = []
+        self.current_media_index = None
+        self._refresh_media_list()
+        self._clear_media_form()
         self.desc_text.delete("1.0", END)
 
+    def _media_label(self, m: Dict[str, Any], i: int) -> str:
+        k = str(m.get("kind", "image"))
+        t = str(m.get("src", "") or m.get("link", "") or "(empty)")
+        if len(t) > 36:
+            t = t[:36] + "…"
+        return f"{i + 1:02d}. {k} · {t}"
+
+    def _refresh_media_list(self):
+        self.media_listbox.delete(0, END)
+        for i, m in enumerate(self.media_items):
+            self.media_listbox.insert(END, self._media_label(m, i))
+
+    def _clear_media_form(self):
+        self._loading_selection = True
+        self.media_kind_var.set("image")
+        self.media_src_var.set("")
+        self.media_poster_var.set("")
+        self.media_link_var.set("")
+        self.media_model_format_var.set("")
+        self._sync_media_browse_state()
+        self._loading_selection = False
+
+    def _sync_media_browse_state(self):
+        kind = self.media_kind_var.get().lower()
+        self.media_browse_btn.configure(state="normal" if kind in {"image", "video", "audio"} else "disabled")
+
+    def _on_media_kind_change(self):
+        self._sync_media_browse_state()
+
+    def _load_media_form(self, index: int) -> None:
+        m = self.media_items[index]
+        self._loading_selection = True
+        self.media_kind_var.set(str(m.get("kind", "image")))
+        self.media_src_var.set(str(m.get("src", "")))
+        self.media_poster_var.set(str(m.get("poster", "")))
+        self.media_link_var.set(str(m.get("link", "")))
+        self.media_model_format_var.set(str(m.get("modelFormat", "")))
+        self._sync_media_browse_state()
+        self._loading_selection = False
+
+    def _on_media_select(self, _evt):
+        sel = self.media_listbox.curselection()
+        if not sel:
+            return
+        new_index = int(sel[0])
+        if self.current_media_index is not None and self.current_media_index != new_index:
+            self._commit_media_form()
+        self.current_media_index = new_index
+        self._load_media_form(new_index)
+
+    def _on_media_add(self):
+        self._commit_media_form()
+        self.media_items.append({"kind": self.media_kind_var.get() or "image", "src": ""})
+        self._refresh_media_list()
+        idx = len(self.media_items) - 1
+        self.media_listbox.selection_clear(0, END)
+        self.media_listbox.selection_set(idx)
+        self.current_media_index = idx
+        self._load_media_form(idx)
+        self._autosave_if_needed()
+
+    def _delete_orphan_paths(self, candidates: List[str]) -> None:
+        if not candidates:
+            return
+        referenced = _iter_work_asset_paths(self.works)
+        for rel in dict.fromkeys(_normalize_rel_path(p) for p in candidates if p):
+            if rel in referenced:
+                continue
+            file_path = self.app.project_dir / Path(rel)
+            if file_path.is_file():
+                try:
+                    file_path.unlink()
+                except OSError:
+                    pass
+
+    def _on_media_delete(self):
+        if self.current_media_index is None:
+            return
+        self._commit_media_form()
+        idx = self.current_media_index
+        paths_to_check: List[str] = []
+        if 0 <= idx < len(self.media_items):
+            m = self.media_items[idx]
+            for key in ("src", "poster"):
+                rel = str(m.get(key, "") or "").strip()
+                if _is_local_asset_path(rel):
+                    paths_to_check.append(_normalize_rel_path(rel))
+            del self.media_items[idx]
+        self.current_media_index = None
+        self._refresh_media_list()
+        self._clear_media_form()
+        self._autosave_if_needed()
+        if bool(self.delete_images_var.get()):
+            self._delete_orphan_paths(paths_to_check)
+
+    def _move_media(self, delta: int):
+        if self.current_media_index is None:
+            return
+        self._commit_media_form()
+        i = self.current_media_index
+        j = i + delta
+        if not (0 <= i < len(self.media_items) and 0 <= j < len(self.media_items)):
+            return
+        self.media_items[i], self.media_items[j] = self.media_items[j], self.media_items[i]
+        self.current_media_index = j
+        self._refresh_media_list()
+        self.media_listbox.selection_clear(0, END)
+        self.media_listbox.selection_set(j)
+        self._autosave_if_needed()
+
+    def _on_media_browse(self):
+        if self.current_index is None:
+            messagebox.showwarning("提示", "请先选择作品。")
+            return
+        kind = self.media_kind_var.get().lower()
+        if kind not in {"image", "video", "audio"}:
+            return
+        w = self.works[self.current_index]
+        if kind == "image":
+            filetypes = [("Image files", "*.png *.jpg *.jpeg *.webp *.gif *.bmp"), ("All files", "*.*")]
+        elif kind == "video":
+            filetypes = [("Video files", "*.mp4 *.webm *.ogg *.mov *.m4v"), ("All files", "*.*")]
+        else:
+            filetypes = [("Audio files", "*.mp3 *.wav *.ogg *.m4a *.aac *.flac"), ("All files", "*.*")]
+        chosen = filedialog.askopenfilename(title="选择媒体文件", filetypes=filetypes)
+        if not chosen:
+            return
+        src = Path(chosen)
+        if not src.exists():
+            return
+        ext = src.suffix.lower() or (".webp" if kind == "image" else ".mp4")
+        seq = (self.current_media_index + 1) if self.current_media_index is not None else (len(self.media_items) + 1)
+        rel = _resolve_import_path(
+            self.app.project_dir,
+            src,
+            self.app.works_img_dir,
+            f"{w.id}-m{seq:02d}{ext}",
+        )
+        self.media_src_var.set(rel)
+        if kind == "image" and not self.media_poster_var.get().strip():
+            self.media_poster_var.set(rel)
+        self._commit_media_form()
+        self._autosave_if_needed()
+
+    def _move_work(self, delta: int) -> None:
+        if self.current_index is None:
+            return
+        self._sync_work_from_editor()
+        i = self.current_index
+        j = i + delta
+        if not (0 <= j < len(self.works)):
+            return
+        preserve_id = self.works[i].id
+        self.works[i], self.works[j] = self.works[j], self.works[i]
+        self.current_index = j
+        self._refresh_list(preserve_id=preserve_id)
+        self._load_work_into_editor(j)
+        self._autosave_if_needed()
+
+    def _apply_sort(self) -> None:
+        self._sync_work_from_editor()
+        preserve_id: Optional[str] = None
+        if self.current_index is not None and 0 <= self.current_index < len(self.works):
+            preserve_id = self.works[self.current_index].id
+        mode = self.sort_mode_var.get()
+        if mode == "按年份":
+            self.works.sort(key=lambda w: (_work_year_sort_key(w.year), (w.title or w.id).casefold()))
+        elif mode == "按添加时间":
+            self.works.sort(
+                key=lambda w: (
+                    w.created_at or "",
+                    _work_id_number(w.id),
+                    (w.title or w.id).casefold(),
+                )
+            )
+        else:
+            self.works.sort(key=lambda w: (w.title or w.id).casefold())
+        self._autosave_if_needed()
+        self._refresh_list(preserve_id=preserve_id)
+        if preserve_id:
+            idx = self._find_work_index_by_id(preserve_id)
+            if idx is not None:
+                self._load_work_into_editor(idx)
+
+    def _collect_media_paths(self, w: Work) -> List[str]:
+        return list(dict.fromkeys(_paths_from_work(w)))
+
     def _on_select(self, _evt):
+        if self._suppress_listbox or self._loading_selection:
+            return
         sel = self.listbox.curselection()
         if not sel:
             return
-        self.current_index = int(sel[0])
-        w = self.works[self.current_index]
-        self.id_var.set(w.id)
-        self.image_var.set(w.image)
-        self.title_var.set(w.title)
-        self.year_var.set(w.year)
-        self.type_var.set(w.type)
-        self.series_var.set(w.series)
-        self.medium_var.set(w.medium)
-        self.size_var.set(w.size)
-        self.content_kind_var.set(w.content_kind or "image")
-        self.content_src_var.set(w.content_src)
-        self.content_poster_var.set(w.content_poster)
-        self.content_link_var.set(w.content_link)
-        self.content_model_format_var.set(w.content_model_format)
-        self.desc_text.delete("1.0", END)
-        self.desc_text.insert("1.0", w.description)
+        new_index = int(sel[0])
+        if self.current_index is not None and self.current_index != new_index:
+            self._sync_work_from_editor()
+        self._load_work_into_editor(new_index)
 
     def _next_id(self) -> str:
         max_num = 0
@@ -331,10 +785,19 @@ class WorksTab(ttk.Frame):
         return f"work-{max_num + 1:03d}"
 
     def _on_add(self):
-        w = Work(id=self._next_id())
+        w = Work(
+            id=self._next_id(),
+            created_at=datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
+        )
         self.works.append(w)
-        self._save_works()
-        self._refresh_from_disk()
+        if self.app.auto_save_var.get():
+            self._persist(silent=True)
+        else:
+            self._save_works()
+        self._refresh_list(preserve_id=w.id)
+        idx = self._find_work_index_by_id(w.id)
+        if idx is not None:
+            self._load_work_into_editor(idx)
 
     def _on_delete(self):
         if self.current_index is None:
@@ -344,9 +807,7 @@ class WorksTab(ttk.Frame):
         if not messagebox.askyesno("确认删除", f"确定删除《{w.title or w.id}》吗？"):
             return
         if bool(self.delete_images_var.get()):
-            for rel in [w.image, w.thumbnail]:
-                if not rel:
-                    continue
+            for rel in self._collect_media_paths(w):
                 p = self.app.project_dir / Path(rel)
                 if p.exists():
                     try:
@@ -354,8 +815,11 @@ class WorksTab(ttk.Frame):
                     except Exception:
                         pass
         del self.works[self.current_index]
-        self._save_works()
-        self._refresh_from_disk()
+        if self.app.auto_save_var.get():
+            self._persist(silent=True)
+        else:
+            self._save_works()
+        self._refresh_list()
 
     def _on_pick_image(self):
         if self.current_index is None:
@@ -371,47 +835,28 @@ class WorksTab(ttk.Frame):
         src = Path(chosen)
         if not src.exists():
             return
-        self.app.works_img_dir.mkdir(parents=True, exist_ok=True)
         ext = src.suffix.lower() or ".webp"
-        dest = self.app.works_img_dir / f"{w.id}{ext}"
-        shutil.copy2(src, dest)
-        rel = _to_posix_rel(self.app.project_dir, dest)
+        rel = _resolve_import_path(
+            self.app.project_dir,
+            src,
+            self.app.works_img_dir,
+            f"{w.id}{ext}",
+        )
         w.image = rel
         w.thumbnail = rel
-        if not w.content_src:
-            w.content_src = rel
-        if not w.content_poster:
-            w.content_poster = rel
         self.image_var.set(w.image)
-        self.content_src_var.set(w.content_src)
-        self.content_poster_var.set(w.content_poster)
-        if self.app.auto_save_var.get():
-            self._save_works()
-
-    def _on_save(self):
-        if self.current_index is None:
-            messagebox.showwarning("提示", "请先选择作品。")
-            return
-        w = self.works[self.current_index]
-        w.title = self.title_var.get().strip()
-        w.year = self.year_var.get().strip()
-        w.type = self.type_var.get().strip()
-        w.series = self.series_var.get().strip()
-        w.medium = self.medium_var.get().strip()
-        w.size = self.size_var.get().strip()
-        w.description = self.desc_text.get("1.0", END).strip()
-        w.content_kind = self.content_kind_var.get().strip().lower() or "image"
-        w.content_src = self.content_src_var.get().strip()
-        w.content_poster = self.content_poster_var.get().strip()
-        w.content_link = self.content_link_var.get().strip()
-        w.content_model_format = self.content_model_format_var.get().strip().lower()
-        self._save_works()
-        messagebox.showinfo("成功", "已保存 works.json。")
-        self._refresh_from_disk()
+        self._autosave_if_needed()
 
     def _refresh_from_disk(self):
+        preserve_id: Optional[str] = None
+        if self.current_index is not None and 0 <= self.current_index < len(self.works):
+            preserve_id = self.works[self.current_index].id
         self._load_works()
-        self._refresh_list()
+        self._refresh_list(preserve_id=preserve_id)
+        if preserve_id:
+            idx = self._find_work_index_by_id(preserve_id)
+            if idx is not None:
+                self._load_work_into_editor(idx)
 
 
 class ExhibitionsTab(ttk.Frame):
@@ -847,7 +1292,9 @@ class WorksManagerApp(tk.Tk):
         _write_json(self.exhibitions_json_path, _read_json(self.exhibitions_json_path, []))
 
         top = ttk.Frame(self, padding=(12, 8)); top.pack(fill="x")
-        ttk.Checkbutton(top, text="自动保存（增删改时）", variable=self.auto_save_var).pack(side=LEFT)
+        ttk.Checkbutton(
+            top, text="自动保存（增删改 / 排序 / 媒体变更时）", variable=self.auto_save_var
+        ).pack(side=LEFT)
         self.notebook = ttk.Notebook(self)
         self.notebook.pack(fill=BOTH, expand=True)
         self.works_tab = WorksTab(self.notebook, self)

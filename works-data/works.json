@@ -10,6 +10,14 @@
     "thumbnail": "img/works/work1.webp",
     "image": "img/works/work1.webp",
     "description": "A painting exploring the tension between organic life and artificial systems.",
+    "createdAt": "",
+    "media": [
+      {
+        "kind": "image",
+        "src": "img/works/work1.webp",
+        "poster": "img/works/work1.webp"
+      }
+    ],
     "content": {
       "kind": "image",
       "src": "img/works/work1.webp",
@@ -29,6 +37,14 @@
     "thumbnail": "img/works/work2thumb.webp",
     "image": "img/works/work2.webp",
     "description": "A mixed media exploration of time and space.",
+    "createdAt": "",
+    "media": [
+      {
+        "kind": "image",
+        "src": "img/works/work2.webp",
+        "poster": "img/works/work2thumb.webp"
+      }
+    ],
     "content": {
       "kind": "image",
       "src": "img/works/work2.webp",
@@ -48,6 +64,14 @@
     "thumbnail": "img/works/work-003.webp",
     "image": "img/works/work-003.webp",
     "description": "",
+    "createdAt": "",
+    "media": [
+      {
+        "kind": "image",
+        "src": "img/works/work-003.webp",
+        "poster": "img/works/work-003.webp"
+      }
+    ],
     "content": {
       "kind": "image",
       "src": "img/works/work-003.webp",
@@ -58,20 +82,36 @@
   },
   {
     "id": "work-004",
-    "title": "Golden bee pedant",
-    "year": "2026",
+    "title": "多条媒体测试",
+    "year": "",
     "type": "sculpture",
     "series": "",
     "medium": "",
     "size": "",
     "thumbnail": "img/works/work-004.png",
     "image": "img/works/work-004.png",
-    "description": "",
+    "description": "单作品编辑区改为 媒体列表（与展览页类似）：\n添加 / 删除 / 排序\n每项可设：内容类型、src、poster、link、3D 格式\n图片 / 视频 / 音频支持 浏览本地文件（复制到 img/works/，命名如 work-001-m01.webp）",
+    "createdAt": "",
+    "media": [
+      {
+        "kind": "image",
+        "src": "img/works/work-009-m02.webp",
+        "poster": "img/works/work-009-m02.webp"
+      },
+      {
+        "kind": "model",
+        "link": "https://sketchfab.com/3d-models/a8122b3c2dd24192bd571ab0b5f412bc/embed"
+      },
+      {
+        "kind": "video",
+        "src": "video/works/lv_7355.webm"
+      }
+    ],
     "content": {
-      "kind": "video",
-      "src": "img/works/work-004.png",
-      "poster": "img/works/work-004.png",
-      "link": "https://youtu.be/GeVEn6-4xd0",
+      "kind": "image",
+      "src": "img/works/work-009-m02.webp",
+      "poster": "img/works/work-009-m02.webp",
+      "link": "",
       "modelFormat": ""
     }
   },
@@ -86,6 +126,14 @@
     "thumbnail": "img/works/work-005.png",
     "image": "img/works/work-005.png",
     "description": "",
+    "createdAt": "",
+    "media": [
+      {
+        "kind": "image",
+        "src": "img/works/work-005.png",
+        "poster": "img/works/work-005.png"
+      }
+    ],
     "content": {
       "kind": "image",
       "src": "img/works/work-005.png",
@@ -105,6 +153,14 @@
     "thumbnail": "img/works/work-006.jpg",
     "image": "img/works/work-006.jpg",
     "description": "",
+    "createdAt": "",
+    "media": [
+      {
+        "kind": "image",
+        "src": "img/works/work-006.jpg",
+        "poster": "img/works/work-006.jpg"
+      }
+    ],
     "content": {
       "kind": "image",
       "src": "img/works/work-006.jpg",
@@ -124,6 +180,14 @@
     "thumbnail": "img/works/work-007.png",
     "image": "img/works/work-007.png",
     "description": "",
+    "createdAt": "",
+    "media": [
+      {
+        "kind": "image",
+        "src": "img/works/work-007.png",
+        "poster": "img/works/work-007.png"
+      }
+    ],
     "content": {
       "kind": "image",
       "src": "img/works/work-007.png",
@@ -143,9 +207,17 @@
     "thumbnail": "img/works/work-008.jpg",
     "image": "img/works/work-008.jpg",
     "description": "",
+    "createdAt": "",
+    "media": [
+      {
+        "kind": "video",
+        "src": "video/works/MOVI0093.webm",
+        "poster": "img/works/work-008.jpg"
+      }
+    ],
     "content": {
       "kind": "video",
-      "src": "/video/MOVI0093.webm",
+      "src": "video/works/MOVI0093.webm",
       "poster": "img/works/work-008.jpg",
       "link": "",
       "modelFormat": ""
@@ -153,20 +225,36 @@
   },
   {
     "id": "work-009",
-    "title": "3D测试",
+    "title": "多条媒体测试",
     "year": "",
-    "type": "",
+    "type": "sculpture",
     "series": "",
     "medium": "",
     "size": "",
-    "thumbnail": "img/works/work-009.png",
-    "image": "img/works/work-009.png",
-    "description": "",
+    "thumbnail": "img/works/work-009.webp",
+    "image": "img/works/work-009.webp",
+    "description": "单作品编辑区改为 媒体列表（与展览页类似）：\n添加 / 删除 / 排序\n每项可设：内容类型、src、poster、link、3D 格式\n图片 / 视频 / 音频支持 浏览本地文件（复制到 img/works/，命名如 work-001-m01.webp）",
+    "createdAt": "",
+    "media": [
+      {
+        "kind": "image",
+        "src": "img/works/work-009-m02.webp",
+        "poster": "img/works/work-009-m02.webp"
+      },
+      {
+        "kind": "model",
+        "link": "https://sketchfab.com/3d-models/a8122b3c2dd24192bd571ab0b5f412bc/embed"
+      },
+      {
+        "kind": "video",
+        "src": "video/works/lv_7355.webm"
+      }
+    ],
     "content": {
-      "kind": "model",
-      "src": "img/works/work-009.png",
-      "poster": "img/works/work-009.png",
-      "link": "https://sketchfab.com/models/dcb15ccc80444c2b9fa65f8643c61931/embed",
+      "kind": "image",
+      "src": "img/works/work-009-m02.webp",
+      "poster": "img/works/work-009-m02.webp",
+      "link": "",
       "modelFormat": ""
     }
   }
