@@ -153,8 +153,7 @@
     "media": [
       {
         "kind": "image",
-        "src": "img/works/work-009.webp",
-        "poster": "img/works/work-009-m02.webp"
+        "src": "img/works/work-009.webp"
       },
       {
         "kind": "model",
@@ -168,7 +167,7 @@
     "content": {
       "kind": "image",
       "src": "img/works/work-009.webp",
-      "poster": "img/works/work-009-m02.webp",
+      "poster": "img/works/work-009.webp",
       "link": "",
       "modelFormat": ""
     }
