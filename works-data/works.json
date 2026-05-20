@@ -1,48 +1,92 @@
 [
   {
-    "id": "work-001",
-    "title": "Ophelia20XX",
-    "year": "2025",
-    "type": "mixed-media",
-    "series": "female divinity",
-    "medium": "Oil color, sand, liquid acrylic, metallic pedants and 3D printed PLA material on canvas",
-    "size": "80 x 100 cm",
-    "thumbnail": "img/works/work1.webp",
-    "image": "img/works/work1.webp",
-    "description": "A painting exploring the tension between organic life and artificial systems.",
+    "id": "work-009",
+    "title": "鹿神",
+    "year": "2026",
+    "type": "sculpture",
+    "series": "physical plane",
+    "medium": "",
+    "size": "",
+    "thumbnail": "img/works/work4.webp",
+    "image": "img/works/work4.webp",
+    "description": "",
     "createdAt": "",
     "media": [
       {
         "kind": "image",
-        "src": "img/works/work1.webp",
-        "poster": "img/works/work1.webp"
+        "src": "img/works/work4.webp"
+      },
+      {
+        "kind": "image",
+        "src": "img/works/work2.webp"
+      },
+      {
+        "kind": "video",
+        "link": "https://youtu.be/48SRoj-HCdU"
       }
     ],
     "content": {
       "kind": "image",
-      "src": "img/works/work1.webp",
-      "poster": "img/works/work1.webp",
+      "src": "img/works/work4.webp",
+      "poster": "img/works/work4.webp",
+      "link": "",
+      "modelFormat": ""
+    }
+  },
+  {
+    "id": "work-003",
+    "title": "排序",
+    "year": "",
+    "type": "",
+    "series": "",
+    "medium": "",
+    "size": "",
+    "thumbnail": "img/works/work-003.webp",
+    "image": "img/works/work-003.webp",
+    "description": "",
+    "createdAt": "",
+    "media": [
+      {
+        "kind": "image",
+        "src": "img/works/work-009.png"
+      },
+      {
+        "kind": "image",
+        "src": "img/works/work2.webp"
+      }
+    ],
+    "content": {
+      "kind": "image",
+      "src": "img/works/work-009.png",
+      "poster": "img/works/work-003.webp",
       "link": "",
       "modelFormat": ""
     }
   },
   {
     "id": "work-002",
-    "title": "Ophanim",
+    "title": "Angel",
     "year": "2024",
-    "type": "mixed-media",
-    "series": "quantum-refraction",
-    "medium": "Oil color, spary paint, dried plants and fabric on canvas",
-    "size": "100 x 80 cm",
+    "type": "",
+    "series": "",
+    "medium": "",
+    "size": "",
     "thumbnail": "img/works/work2thumb.webp",
     "image": "img/works/work2.webp",
-    "description": "A mixed media exploration of time and space.",
+    "description": "",
     "createdAt": "",
     "media": [
       {
         "kind": "image",
-        "src": "img/works/work2.webp",
-        "poster": "img/works/work2thumb.webp"
+        "src": "img/works/work2.webp"
+      },
+      {
+        "kind": "image",
+        "src": "img/works/work2.webp"
+      },
+      {
+        "kind": "video",
+        "src": "video/lv_7355.webm"
       }
     ],
     "content": {
@@ -54,120 +98,57 @@
     }
   },
   {
-    "id": "work-003",
-    "title": "Breakfast",
-    "year": "2024",
+    "id": "work-005",
+    "title": "Ophelia",
+    "year": "2025",
     "type": "painting",
-    "series": "quantum-refraction",
-    "medium": "Acrylic on canvas",
-    "size": "40 x 60 cm",
-    "thumbnail": "img/works/work-003.webp",
-    "image": "img/works/work-003.webp",
+    "series": "female divinity",
+    "medium": "",
+    "size": "",
+    "thumbnail": "img/works/work1.webp",
+    "image": "img/works/work1.webp",
     "description": "",
-    "createdAt": "",
+    "createdAt": "2026-05-20T07:35:50+00:00",
     "media": [
       {
         "kind": "image",
-        "src": "img/works/work-003.webp",
-        "poster": "img/works/work-003.webp"
+        "src": "img/works/work1.webp"
       }
     ],
     "content": {
       "kind": "image",
-      "src": "img/works/work-003.webp",
-      "poster": "img/works/work-003.webp",
+      "src": "img/works/work1.webp",
+      "poster": "img/works/work1.webp",
       "link": "",
       "modelFormat": ""
     }
   },
   {
-    "id": "work-008",
-    "title": "内视频测试",
-    "year": "2026",
-    "type": "video",
+    "id": "work-001",
+    "title": "测试测试测试",
+    "year": "2023",
+    "type": "",
     "series": "",
     "medium": "",
     "size": "",
-    "thumbnail": "img/works/work-008.jpg",
-    "image": "img/works/work-008.jpg",
+    "thumbnail": "img/works/work-004.jpg",
+    "image": "img/works/work-004.jpg",
     "description": "",
     "createdAt": "",
     "media": [
       {
-        "kind": "video",
-        "src": "video/works/MOVI0093.webm",
-        "poster": "img/works/work-008.jpg"
-      }
-    ],
-    "content": {
-      "kind": "video",
-      "src": "video/works/MOVI0093.webm",
-      "poster": "img/works/work-008.jpg",
-      "link": "",
-      "modelFormat": ""
-    }
-  },
-  {
-    "id": "work-010",
-    "title": "排序测试",
-    "year": "2026",
-    "type": "painting",
-    "series": "",
-    "medium": "",
-    "size": "",
-    "thumbnail": "img/works/work-009.png",
-    "image": "img/works/work-009.png",
-    "description": "",
-    "createdAt": "2026-05-18T02:37:58+00:00",
-    "media": [
-      {
         "kind": "image",
-        "src": "img/works/work-009.png",
-        "poster": "img/works/work-009.png"
+        "src": "img/works/work-004.jpg"
       },
       {
         "kind": "image",
-        "src": "img/works/work-008.jpg"
+        "src": "img/works/work2.webp"
       }
     ],
     "content": {
       "kind": "image",
-      "src": "img/works/work-009.png",
-      "poster": "img/works/work-009.png",
-      "link": "",
-      "modelFormat": ""
-    }
-  },
-  {
-    "id": "work-009",
-    "title": "多条媒体测试",
-    "year": "",
-    "type": "sculpture",
-    "series": "",
-    "medium": "",
-    "size": "",
-    "thumbnail": "img/works/work-009.webp",
-    "image": "img/works/work-009.webp",
-    "description": "单作品编辑区改为 媒体列表（与展览页类似）：\n添加 / 删除 / 排序\n每项可设：内容类型、src、poster、link、3D 格式\n图片 / 视频 / 音频支持 浏览本地文件（复制到 img/works/，命名如 work-001-m01.webp）",
-    "createdAt": "",
-    "media": [
-      {
-        "kind": "image",
-        "src": "img/works/work-009.webp"
-      },
-      {
-        "kind": "model",
-        "link": "https://sketchfab.com/3d-models/a8122b3c2dd24192bd571ab0b5f412bc/embed"
-      },
-      {
-        "kind": "video",
-        "src": "video/works/MOVI0093.webm"
-      }
-    ],
-    "content": {
-      "kind": "image",
-      "src": "img/works/work-009.webp",
-      "poster": "img/works/work-009.webp",
+      "src": "img/works/work-004.jpg",
+      "poster": "img/works/work-004.jpg",
       "link": "",
       "modelFormat": ""
     }
