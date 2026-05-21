@@ -1,63 +1,25 @@
 [
   {
-    "id": "work-009",
-    "title": "鹿神",
-    "year": "2026",
-    "type": "sculpture",
-    "series": "physical plane",
-    "medium": "",
-    "size": "",
-    "thumbnail": "img/works/work4.webp",
-    "image": "img/works/work4.webp",
-    "description": "",
-    "createdAt": "",
-    "media": [
-      {
-        "kind": "image",
-        "src": "img/works/work4.webp"
-      },
-      {
-        "kind": "model",
-        "link": "https://sketchfab.com/models/a8122b3c2dd24192bd571ab0b5f412bc/embed"
-      },
-      {
-        "kind": "video",
-        "link": "https://youtu.be/48SRoj-HCdU"
-      }
-    ],
-    "content": {
-      "kind": "image",
-      "src": "img/works/work4.webp",
-      "poster": "img/works/work4.webp",
-      "link": "",
-      "modelFormat": ""
-    }
-  },
-  {
-    "id": "work-003",
-    "title": "排序",
-    "year": "",
-    "type": "",
-    "series": "",
-    "medium": "",
-    "size": "",
+    "id": "work-001",
+    "title": "Breakfast",
+    "year": "2024",
+    "type": "painting",
+    "series": "quantum refraction",
+    "medium": "Acrylic on canvas",
+    "size": "40 ×60 cm",
     "thumbnail": "img/works/work-003.webp",
     "image": "img/works/work-003.webp",
     "description": "",
-    "createdAt": "",
+    "createdAt": "2026-05-21T01:37:45+00:00",
     "media": [
       {
         "kind": "image",
-        "src": "img/works/work-009.png"
-      },
-      {
-        "kind": "image",
-        "src": "img/works/work2.webp"
+        "src": "img/works/work-003.webp"
       }
     ],
     "content": {
       "kind": "image",
-      "src": "img/works/work-009.png",
+      "src": "img/works/work-003.webp",
       "poster": "img/works/work-003.webp",
       "link": "",
       "modelFormat": ""
@@ -65,28 +27,188 @@
   },
   {
     "id": "work-002",
-    "title": "Angel",
+    "title": "Chaos",
     "year": "2024",
-    "type": "",
-    "series": "",
+    "type": "mixed-media",
+    "series": "quantum refraction",
+    "medium": "acrylic on canvas, circuit boards, coffee powder, plaster, fabric, resin crystals.",
+    "size": "40 × 30 cm",
+    "thumbnail": "img/works/chaos.webp",
+    "image": "img/works/chaos.webp",
+    "description": "",
+    "createdAt": "2026-05-21T01:39:46+00:00",
+    "media": [
+      {
+        "kind": "image",
+        "src": "img/works/chaos.webp"
+      }
+    ],
+    "content": {
+      "kind": "image",
+      "src": "img/works/chaos.webp",
+      "poster": "img/works/chaos.webp",
+      "link": "",
+      "modelFormat": ""
+    }
+  },
+  {
+    "id": "work-003",
+    "title": "Study Of Matter I",
+    "year": "2024",
+    "type": "mixed-media",
+    "series": "quantum refraction",
+    "medium": "acrylic on canvas, charcoal pencil, modeling paste, sand, dried leaves.",
+    "size": "60 × 80 cm",
+    "thumbnail": "img/works/Study Of Matter I.webp",
+    "image": "img/works/Study Of Matter I.webp",
+    "description": "",
+    "createdAt": "2026-05-21T01:49:03+00:00",
+    "media": [
+      {
+        "kind": "image",
+        "src": "img/works/Study Of Matter I.webp"
+      }
+    ],
+    "content": {
+      "kind": "image",
+      "src": "img/works/Study Of Matter I.webp",
+      "poster": "img/works/Study Of Matter I.webp",
+      "link": "",
+      "modelFormat": ""
+    }
+  },
+  {
+    "id": "work-004",
+    "title": "Study Of Matter II",
+    "year": "2024",
+    "type": "mixed-media",
+    "series": "quantum refraction",
+    "medium": "acrylic on canvas, metal, charcoal pencil, modeling paste.",
+    "size": "60 × 40 cm",
+    "thumbnail": "img/works/Study Of Matter II.webp",
+    "image": "img/works/Study Of Matter II.webp",
+    "description": "",
+    "createdAt": "2026-05-21T01:54:18+00:00",
+    "media": [
+      {
+        "kind": "image",
+        "src": "img/works/Study Of Matter II.webp"
+      }
+    ],
+    "content": {
+      "kind": "image",
+      "src": "img/works/Study Of Matter II.webp",
+      "poster": "img/works/Study Of Matter II.webp",
+      "link": "",
+      "modelFormat": ""
+    }
+  },
+  {
+    "id": "work-016",
+    "title": "Ophelia 20XX",
+    "year": "2025",
+    "type": "mixed-media",
+    "series": "female divinity",
     "medium": "",
     "size": "",
-    "thumbnail": "img/works/work2thumb.webp",
-    "image": "img/works/work2.webp",
+    "thumbnail": "img/works/work1.webp",
+    "image": "img/works/work1.webp",
     "description": "",
-    "createdAt": "",
+    "createdAt": "2026-05-21T02:37:42+00:00",
+    "media": [
+      {
+        "kind": "image",
+        "src": "img/works/Ophelia 20XX.webp"
+      },
+      {
+        "kind": "image",
+        "src": "img/works/work1.webp"
+      }
+    ],
+    "content": {
+      "kind": "image",
+      "src": "img/works/Ophelia 20XX.webp",
+      "poster": "img/works/work1.webp",
+      "link": "",
+      "modelFormat": ""
+    }
+  },
+  {
+    "id": "work-005",
+    "title": "The Ancient",
+    "year": "2023",
+    "type": "mixed-media",
+    "series": "quantum refraction",
+    "medium": "water color on rice paper, wax, salt, ink.",
+    "size": "70 × 136 cm",
+    "thumbnail": "img/works/The ancient.webp",
+    "image": "img/works/The ancient.webp",
+    "description": "The  work was inspired by H.P. Lovecraft’s short novel \"The Call of Cthulhu\". The piece reflect my ongoing curiosity about how fear and beauty coexist within my conception.In this work, I focus on the use of ink and salt on rice paper. \n\nInk, traditionally associated with Chinese landscape painting, creates a sense of vastness of natural spaces. What I aimed to capture was precisely the psychological tension one feels when confronting such immensity.\n\nThe gradual diffusion of ink suggest the aquatic quality of Lovecraftian creatures, on the other hand it also acts as  visualisation of spreading of madness frequently depicted in his works.",
+    "createdAt": "2026-05-21T01:59:24+00:00",
+    "media": [
+      {
+        "kind": "image",
+        "src": "img/works/The ancient.webp"
+      }
+    ],
+    "content": {
+      "kind": "image",
+      "src": "img/works/The ancient.webp",
+      "poster": "img/works/The ancient.webp",
+      "link": "",
+      "modelFormat": ""
+    }
+  },
+  {
+    "id": "work-010",
+    "title": "Cosmic",
+    "year": "2025",
+    "type": "mixed-media",
+    "series": "quantum refraction",
+    "medium": "acrylic on canvas, spray paint, sand, glitter, resin crystals, modeling paste.",
+    "size": "100 × 80 cm",
+    "thumbnail": "img/works/Cosmic.webp",
+    "image": "img/works/Cosmic.webp",
+    "description": "This piece was inspired by Fungi from Yuggoth by H.P. Lovecraft, where unknown entity dwarf human existence. By placing a colossal, god-like organism against the vastness of the universe, I  questioned humanity’s perceived significance within an indifferent cosmos. It echoes the concept of Alice Syndrome: a distortion of scale and perception reinterpreted here on a cosmic scale. The work reflects my ongoing interest in exploring how awe and fear intertwine when confronting the unknown.",
+    "createdAt": "2026-05-21T02:11:50+00:00",
+    "media": [
+      {
+        "kind": "image",
+        "src": "img/works/Cosmic.webp"
+      },
+      {
+        "kind": "video",
+        "src": "video/lv_7355.webm"
+      }
+    ],
+    "content": {
+      "kind": "image",
+      "src": "img/works/Cosmic.webp",
+      "poster": "img/works/Cosmic.webp",
+      "link": "",
+      "modelFormat": ""
+    }
+  },
+  {
+    "id": "work-008",
+    "title": "Ophanim",
+    "year": "2024",
+    "type": "mixed-media",
+    "series": "vision enchanted",
+    "medium": "oil on canvas, spray paint, dried plants, fabric, modeling paste.",
+    "size": "80 × 100 cm",
+    "thumbnail": "img/works/work2thumb.webp",
+    "image": "img/works/work2thumb.webp",
+    "description": "This work is inspired by the Old Testament, particularly the depiction of angels as messengers of God.\n\nThis hybrid organism represents an imagined extraterrestrial life form : one that blurs the boundary between organic and inorganic matter. It embodies my ongoing exploration of mythological archetypes reinterpreted through a contemporary, post-organic aesthetics lens.",
+    "createdAt": "2026-05-21T02:09:33+00:00",
     "media": [
       {
         "kind": "image",
         "src": "img/works/work2.webp"
       },
       {
-        "kind": "image",
-        "src": "img/works/work2.webp"
-      },
-      {
         "kind": "video",
-        "src": "video/lv_7355.webm"
+        "src": "video/works/ophanim.webm"
       }
     ],
     "content": {
@@ -98,57 +220,745 @@
     }
   },
   {
-    "id": "work-005",
-    "title": "Ophelia",
-    "year": "2025",
-    "type": "painting",
-    "series": "female divinity",
-    "medium": "",
-    "size": "",
-    "thumbnail": "img/works/work1.webp",
-    "image": "img/works/work1.webp",
-    "description": "",
-    "createdAt": "2026-05-20T07:35:50+00:00",
+    "id": "work-006",
+    "title": "Color Of Stars",
+    "year": "2023",
+    "type": "mixed-media",
+    "series": "quantum refraction",
+    "medium": "water color on rice paper, wax, salt, ink, soap water.",
+    "size": "70 × 136 cm",
+    "thumbnail": "img/works/Color Of Stars.webp",
+    "image": "img/works/Color Of Stars.webp",
+    "description": "This work was inspired by H.P. Lovecraft’s short novel \"The Colour Out of Space\".  The pieces reflect my ongoing curiosity about how fear and beauty coexist within my conception.",
+    "createdAt": "2026-05-21T02:00:20+00:00",
     "media": [
       {
         "kind": "image",
-        "src": "img/works/work1.webp"
+        "src": "img/works/Color Of Stars.webp"
       }
     ],
     "content": {
       "kind": "image",
-      "src": "img/works/work1.webp",
-      "poster": "img/works/work1.webp",
+      "src": "img/works/Color Of Stars.webp",
+      "poster": "img/works/Color Of Stars.webp",
       "link": "",
       "modelFormat": ""
     }
   },
   {
-    "id": "work-001",
-    "title": "测试测试测试",
-    "year": "2023",
-    "type": "",
-    "series": "",
-    "medium": "",
-    "size": "",
-    "thumbnail": "img/works/work-004.jpg",
-    "image": "img/works/work-004.jpg",
+    "id": "work-007",
+    "title": "Erosion",
+    "year": "2024",
+    "type": "mixed-media",
+    "series": "quantum refraction",
+    "medium": "acrylic on canvas, spray paint, aluminum foil, sand, modeling paste.",
+    "size": "30 × 30 cm ×2 pieces",
+    "thumbnail": "img/works/Erosion2.webp",
+    "image": "img/works/Erosion2.webp",
     "description": "",
-    "createdAt": "",
+    "createdAt": "2026-05-21T02:04:37+00:00",
     "media": [
       {
         "kind": "image",
-        "src": "img/works/work-004.jpg"
+        "src": "img/works/Erosion2.webp"
       },
       {
         "kind": "image",
-        "src": "img/works/work2.webp"
+        "src": "img/works/Erosion1.webp"
       }
     ],
     "content": {
       "kind": "image",
-      "src": "img/works/work-004.jpg",
-      "poster": "img/works/work-004.jpg",
+      "src": "img/works/Erosion2.webp",
+      "poster": "img/works/Erosion2.webp",
+      "link": "",
+      "modelFormat": ""
+    }
+  },
+  {
+    "id": "work-014",
+    "title": "Mother Of The Universe",
+    "year": "2024",
+    "type": "mixed-media",
+    "series": "female divinity",
+    "medium": "oil on canvas, spray paint, resin crystals, synthetic gold leaf.",
+    "size": "100 × 80 cm",
+    "thumbnail": "img/works/Mother Of The Universe.webp",
+    "image": "img/works/Mother Of The Universe.webp",
+    "description": "Within the framework of cosmic horror, I reinterpret this fear through feminine divinity, where female body becomes both sacred and intimidating.\n\n The goddess figure, modeled after myself, embodies a sense of unity: I am  her, and she is me.",
+    "createdAt": "2026-05-21T02:30:31+00:00",
+    "media": [
+      {
+        "kind": "image",
+        "src": "img/works/Mother Of The Universe.webp"
+      }
+    ],
+    "content": {
+      "kind": "image",
+      "src": "img/works/Mother Of The Universe.webp",
+      "poster": "img/works/Mother Of The Universe.webp",
+      "link": "",
+      "modelFormat": ""
+    }
+  },
+  {
+    "id": "work-011",
+    "title": "Long Shen",
+    "year": "2024",
+    "type": "mixed-media",
+    "series": "vision enchanted",
+    "medium": "oil and acrylic on canvas, spray paint, ink,modeling paste, ink, synthetic gold leaf.",
+    "size": "80 × 100 cm",
+    "thumbnail": "img/works/Long Shen.webp",
+    "image": "img/works/Long Shen.webp",
+    "description": "",
+    "createdAt": "2026-05-21T02:16:20+00:00",
+    "media": [
+      {
+        "kind": "image",
+        "src": "img/works/Long Shen.webp"
+      }
+    ],
+    "content": {
+      "kind": "image",
+      "src": "img/works/Long Shen.webp",
+      "poster": "img/works/Long Shen.webp",
+      "link": "",
+      "modelFormat": ""
+    }
+  },
+  {
+    "id": "work-012",
+    "title": "Inorganic Pulses",
+    "year": "2023",
+    "type": "painting",
+    "series": "quantum refraction",
+    "medium": "oil on canvas",
+    "size": "46 x126 cm x 3 pieces",
+    "thumbnail": "img/works/Inorganic Pulses1.webp",
+    "image": "img/works/Inorganic Pulses1.webp",
+    "description": "",
+    "createdAt": "2026-05-21T02:22:02+00:00",
+    "media": [
+      {
+        "kind": "image",
+        "src": "img/works/Inorganic Pulses1.webp"
+      },
+      {
+        "kind": "image",
+        "src": "img/works/Inorganic Pulses2.webp"
+      },
+      {
+        "kind": "image",
+        "src": "img/works/inorganic pulses3.webp"
+      }
+    ],
+    "content": {
+      "kind": "image",
+      "src": "img/works/Inorganic Pulses1.webp",
+      "poster": "img/works/Inorganic Pulses1.webp",
+      "link": "",
+      "modelFormat": ""
+    }
+  },
+  {
+    "id": "work-013",
+    "title": "Unicorn",
+    "year": "2024",
+    "type": "mixed-media",
+    "series": "vision enchanted",
+    "medium": "oil and acrylic on canvas, spray paint, ink,modeling paste, ink, synthetic gold leaf.",
+    "size": "100 × 80 cm",
+    "thumbnail": "img/works/Unicorn.webp",
+    "image": "img/works/Unicorn.webp",
+    "description": "",
+    "createdAt": "2026-05-21T02:27:37+00:00",
+    "media": [
+      {
+        "kind": "image",
+        "src": "img/works/Unicorn.webp"
+      }
+    ],
+    "content": {
+      "kind": "image",
+      "src": "img/works/Unicorn.webp",
+      "poster": "img/works/Unicorn.webp",
+      "link": "",
+      "modelFormat": ""
+    }
+  },
+  {
+    "id": "work-032",
+    "title": "Eve",
+    "year": "2026",
+    "type": "mixed-media",
+    "series": "female divinity",
+    "medium": "oil and acrylic on canvas, spray paint, tree branches, metal wire",
+    "size": "",
+    "thumbnail": "img/works/Eve.webp",
+    "image": "img/works/Eve.webp",
+    "description": "",
+    "createdAt": "2026-05-21T07:20:49+00:00",
+    "media": [
+      {
+        "kind": "image",
+        "src": "img/works/Eve.webp"
+      },
+      {
+        "kind": "image",
+        "src": "img/works/Evedark.webp"
+      },
+      {
+        "kind": "video",
+        "src": "video/works/eve.webm"
+      }
+    ],
+    "content": {
+      "kind": "image",
+      "src": "img/works/Eve.webp",
+      "poster": "img/works/Eve.webp",
+      "link": "",
+      "modelFormat": ""
+    }
+  },
+  {
+    "id": "work-015",
+    "title": "The Sin",
+    "year": "2024",
+    "type": "mixed-media",
+    "series": "female divinity",
+    "medium": "oil on canvas, spray paint, dried plants, fabric, wax, hot glue, modeling paste.",
+    "size": "80 × 100 cm",
+    "thumbnail": "img/works/The Sin.webp",
+    "image": "img/works/The Sin.webp",
+    "description": "",
+    "createdAt": "2026-05-21T02:35:11+00:00",
+    "media": [
+      {
+        "kind": "image",
+        "src": "img/works/The Sin.webp"
+      }
+    ],
+    "content": {
+      "kind": "image",
+      "src": "img/works/The Sin.webp",
+      "poster": "img/works/The Sin.webp",
+      "link": "",
+      "modelFormat": ""
+    }
+  },
+  {
+    "id": "work-017",
+    "title": "Hathor",
+    "year": "2025",
+    "type": "mixed-media",
+    "series": "female divinity",
+    "medium": "oil on canvas, liquid acrylic, spray paint, modeling paste, synthetic gold leaf.",
+    "size": "130 × 60 cm",
+    "thumbnail": "img/works/hathorthumb.webp",
+    "image": "img/works/hathorthumb.webp",
+    "description": "",
+    "createdAt": "2026-05-21T02:44:06+00:00",
+    "media": [
+      {
+        "kind": "image",
+        "src": "img/works/Hathor.webp"
+      }
+    ],
+    "content": {
+      "kind": "image",
+      "src": "img/works/Hathor.webp",
+      "poster": "img/works/hathorthumb.webp",
+      "link": "",
+      "modelFormat": ""
+    }
+  },
+  {
+    "id": "work-018",
+    "title": "Athena",
+    "year": "2025",
+    "type": "mixed-media",
+    "series": "female divinity",
+    "medium": "acrylic on canvas, pastel, gold leaf, PLA(3D printed).",
+    "size": "100 × 80 cm",
+    "thumbnail": "img/works/athena.webp",
+    "image": "img/works/athena.webp",
+    "description": "",
+    "createdAt": "2026-05-21T02:47:18+00:00",
+    "media": [
+      {
+        "kind": "image",
+        "src": "img/works/athena.webp"
+      },
+      {
+        "kind": "image",
+        "src": "img/works/athena2.webp"
+      }
+    ],
+    "content": {
+      "kind": "image",
+      "src": "img/works/athena.webp",
+      "poster": "img/works/athena.webp",
+      "link": "",
+      "modelFormat": ""
+    }
+  },
+  {
+    "id": "work-019",
+    "title": "NüWA",
+    "year": "2025",
+    "type": "mixed-media",
+    "series": "female divinity",
+    "medium": "oil and acrylic on canvas, dried leaves, copper bells, red thread, spray paint, pastel, color pigment, PLA(3D printed).",
+    "size": "100 × 80 cm",
+    "thumbnail": "img/works/nuwa1.webp",
+    "image": "img/works/nuwa1.webp",
+    "description": "",
+    "createdAt": "2026-05-21T02:51:10+00:00",
+    "media": [
+      {
+        "kind": "image",
+        "src": "img/works/nuwa1.webp"
+      },
+      {
+        "kind": "image",
+        "src": "img/works/nuwa2.webp"
+      },
+      {
+        "kind": "image",
+        "src": "img/works/nuwa3.webp"
+      },
+      {
+        "kind": "video",
+        "src": "video/works/Nuwa.webm"
+      }
+    ],
+    "content": {
+      "kind": "image",
+      "src": "img/works/nuwa1.webp",
+      "poster": "img/works/nuwa1.webp",
+      "link": "",
+      "modelFormat": ""
+    }
+  },
+  {
+    "id": "work-009",
+    "title": "鹿神",
+    "year": "2026",
+    "type": "sculpture",
+    "series": "vision enchanted",
+    "medium": "",
+    "size": "",
+    "thumbnail": "img/works/work4.webp",
+    "image": "img/works/work4.webp",
+    "description": "",
+    "createdAt": "",
+    "media": [
+      {
+        "kind": "model",
+        "link": "https://sketchfab.com/models/a8122b3c2dd24192bd571ab0b5f412bc/embed"
+      },
+      {
+        "kind": "image",
+        "src": "img/works/lushen2.webp"
+      },
+      {
+        "kind": "image",
+        "src": "img/works/work4.webp"
+      },
+      {
+        "kind": "image",
+        "src": "img/works/lushen3.webp"
+      },
+      {
+        "kind": "video",
+        "link": "https://youtu.be/48SRoj-HCdU"
+      }
+    ],
+    "content": {
+      "kind": "model",
+      "src": "img/works/work4.webp",
+      "poster": "img/works/work4.webp",
+      "link": "https://sketchfab.com/models/a8122b3c2dd24192bd571ab0b5f412bc/embed",
+      "modelFormat": ""
+    }
+  },
+  {
+    "id": "work-033",
+    "title": "Deep Ones",
+    "year": "2026",
+    "type": "sculpture",
+    "series": "",
+    "medium": "",
+    "size": "",
+    "thumbnail": "img/works/DeepOnes2.webp",
+    "image": "img/works/DeepOnes2.webp",
+    "description": "",
+    "createdAt": "2026-05-21T07:39:14+00:00",
+    "media": [
+      {
+        "kind": "model",
+        "link": "https://sketchfab.com/models/58a84c31844e4a7c9881a5d9dac3ac90/embed"
+      },
+      {
+        "kind": "image",
+        "src": "img/works/Deep Ones1.webp"
+      },
+      {
+        "kind": "image",
+        "src": "img/works/DeepOnes2.webp"
+      }
+    ],
+    "content": {
+      "kind": "model",
+      "src": "img/works/DeepOnes2.webp",
+      "poster": "img/works/DeepOnes2.webp",
+      "link": "https://sketchfab.com/models/58a84c31844e4a7c9881a5d9dac3ac90/embed",
+      "modelFormat": ""
+    }
+  },
+  {
+    "id": "work-020",
+    "title": "Time Sqare",
+    "year": "2025",
+    "type": "painting",
+    "series": "physical plane",
+    "medium": "oil on canvas",
+    "size": "",
+    "thumbnail": "img/works/TimeSquare.webp",
+    "image": "img/works/TimeSquare.webp",
+    "description": "",
+    "createdAt": "2026-05-21T02:59:37+00:00",
+    "media": [
+      {
+        "kind": "image",
+        "src": "img/works/TimeSquare.webp"
+      }
+    ],
+    "content": {
+      "kind": "image",
+      "src": "img/works/TimeSquare.webp",
+      "poster": "img/works/TimeSquare.webp",
+      "link": "",
+      "modelFormat": ""
+    }
+  },
+  {
+    "id": "work-021",
+    "title": "Street Artists",
+    "year": "2025",
+    "type": "painting",
+    "series": "physical plane",
+    "medium": "oil on canvas",
+    "size": "",
+    "thumbnail": "img/works/streetartists.webp",
+    "image": "img/works/streetartists.webp",
+    "description": "",
+    "createdAt": "2026-05-21T03:02:14+00:00",
+    "media": [
+      {
+        "kind": "image",
+        "src": "img/works/streetartists.webp"
+      }
+    ],
+    "content": {
+      "kind": "image",
+      "src": "img/works/streetartists.webp",
+      "poster": "img/works/streetartists.webp",
+      "link": "",
+      "modelFormat": ""
+    }
+  },
+  {
+    "id": "work-022",
+    "title": "FishMonger",
+    "year": "2025",
+    "type": "painting",
+    "series": "physical plane",
+    "medium": "oil on canvas",
+    "size": "",
+    "thumbnail": "img/works/fishmonger.webp",
+    "image": "img/works/fishmonger.webp",
+    "description": "",
+    "createdAt": "2026-05-21T03:06:18+00:00",
+    "media": [
+      {
+        "kind": "image",
+        "src": "img/works/fishmonger.webp"
+      }
+    ],
+    "content": {
+      "kind": "image",
+      "src": "img/works/fishmonger.webp",
+      "poster": "img/works/fishmonger.webp",
+      "link": "",
+      "modelFormat": ""
+    }
+  },
+  {
+    "id": "work-023",
+    "title": "The One Piece",
+    "year": "2023",
+    "type": "mixed-media",
+    "series": "vision enchanted",
+    "medium": "oil on canvas, resin, plastic, metal alloy, acrylic, sand, fabric.",
+    "size": "60 x 80 cm",
+    "thumbnail": "img/works/The One Piece.webp",
+    "image": "img/works/The One Piece.webp",
+    "description": "",
+    "createdAt": "2026-05-21T03:12:01+00:00",
+    "media": [
+      {
+        "kind": "image",
+        "src": "img/works/The One Piece.webp"
+      }
+    ],
+    "content": {
+      "kind": "image",
+      "src": "img/works/The One Piece.webp",
+      "poster": "img/works/The One Piece.webp",
+      "link": "",
+      "modelFormat": ""
+    }
+  },
+  {
+    "id": "work-034",
+    "title": "Scylla",
+    "year": "2026",
+    "type": "sculpture",
+    "series": "",
+    "medium": "",
+    "size": "",
+    "thumbnail": "img/works/Scylla.webp",
+    "image": "img/works/Scylla.webp",
+    "description": "",
+    "createdAt": "2026-05-21T07:46:08+00:00",
+    "media": [
+      {
+        "kind": "model",
+        "link": "https://sketchfab.com/models/1ff114ab689742b79e860de7334388bd/embed"
+      },
+      {
+        "kind": "image",
+        "src": "img/works/Scylla.webp"
+      },
+      {
+        "kind": "image",
+        "src": "img/works/Scylla2.webp"
+      }
+    ],
+    "content": {
+      "kind": "model",
+      "src": "img/works/Scylla.webp",
+      "poster": "img/works/Scylla.webp",
+      "link": "https://sketchfab.com/models/1ff114ab689742b79e860de7334388bd/embed",
+      "modelFormat": ""
+    }
+  },
+  {
+    "id": "work-024",
+    "title": "Chandra",
+    "year": "2024",
+    "type": "mixed-media",
+    "series": "vision enchanted",
+    "medium": "oil on canvas, coffee powder, sand, resin crystals.",
+    "size": "80 × 100 cm",
+    "thumbnail": "img/works/chadra.webp",
+    "image": "img/works/chadra.webp",
+    "description": "",
+    "createdAt": "2026-05-21T03:16:47+00:00",
+    "media": [
+      {
+        "kind": "image",
+        "src": "img/works/chadra.webp"
+      }
+    ],
+    "content": {
+      "kind": "image",
+      "src": "img/works/chadra.webp",
+      "poster": "img/works/chadra.webp",
+      "link": "",
+      "modelFormat": ""
+    }
+  },
+  {
+    "id": "work-025",
+    "title": "The Daedalus",
+    "year": "2023",
+    "type": "mixed-media",
+    "series": "quantum refraction",
+    "medium": "",
+    "size": "",
+    "thumbnail": "img/works/daedalus.webp",
+    "image": "img/works/daedalus.webp",
+    "description": "",
+    "createdAt": "2026-05-21T03:21:09+00:00",
+    "media": [
+      {
+        "kind": "image",
+        "src": "img/works/daedalus.webp"
+      }
+    ],
+    "content": {
+      "kind": "image",
+      "src": "img/works/daedalus.webp",
+      "poster": "img/works/daedalus.webp",
+      "link": "",
+      "modelFormat": ""
+    }
+  },
+  {
+    "id": "work-026",
+    "title": "Rick & Morty",
+    "year": "2024",
+    "type": "painting",
+    "series": "",
+    "medium": "",
+    "size": "",
+    "thumbnail": "img/works/rick&morty.webp",
+    "image": "img/works/rick&morty.webp",
+    "description": "",
+    "createdAt": "2026-05-21T03:21:51+00:00",
+    "media": [
+      {
+        "kind": "image",
+        "src": "img/works/rick&morty.webp"
+      }
+    ],
+    "content": {
+      "kind": "image",
+      "src": "img/works/rick&morty.webp",
+      "poster": "img/works/rick&morty.webp",
+      "link": "",
+      "modelFormat": ""
+    }
+  },
+  {
+    "id": "work-027",
+    "title": "Rivendell",
+    "year": "2024",
+    "type": "painting",
+    "series": "vision enchanted",
+    "medium": "oil on canvas",
+    "size": "",
+    "thumbnail": "img/works/Rivendale.webp",
+    "image": "img/works/Rivendale.webp",
+    "description": "",
+    "createdAt": "2026-05-21T03:26:08+00:00",
+    "media": [
+      {
+        "kind": "image",
+        "src": "img/works/Rivendale.webp"
+      }
+    ],
+    "content": {
+      "kind": "image",
+      "src": "img/works/Rivendale.webp",
+      "poster": "img/works/Rivendale.webp",
+      "link": "",
+      "modelFormat": ""
+    }
+  },
+  {
+    "id": "work-028",
+    "title": "Blue Python",
+    "year": "2025",
+    "type": "painting",
+    "series": "physical plane",
+    "medium": "",
+    "size": "",
+    "thumbnail": "img/works/Python.webp",
+    "image": "img/works/Python.webp",
+    "description": "",
+    "createdAt": "2026-05-21T03:27:21+00:00",
+    "media": [
+      {
+        "kind": "image",
+        "src": "img/works/Python.webp"
+      }
+    ],
+    "content": {
+      "kind": "image",
+      "src": "img/works/Python.webp",
+      "poster": "img/works/Python.webp",
+      "link": "",
+      "modelFormat": ""
+    }
+  },
+  {
+    "id": "work-029",
+    "title": "All Hallow's Eve",
+    "year": "2024",
+    "type": "painting",
+    "series": "physical plane",
+    "medium": "",
+    "size": "",
+    "thumbnail": "img/works/Halloween.webp",
+    "image": "img/works/Halloween.webp",
+    "description": "",
+    "createdAt": "2026-05-21T06:58:04+00:00",
+    "media": [
+      {
+        "kind": "image",
+        "src": "img/works/Halloween.webp"
+      }
+    ],
+    "content": {
+      "kind": "image",
+      "src": "img/works/Halloween.webp",
+      "poster": "img/works/Halloween.webp",
+      "link": "",
+      "modelFormat": ""
+    }
+  },
+  {
+    "id": "work-030",
+    "title": "Creek",
+    "year": "2024",
+    "type": "painting",
+    "series": "physical plane",
+    "medium": "oil on canvas",
+    "size": "",
+    "thumbnail": "img/works/creek.webp",
+    "image": "img/works/creek.webp",
+    "description": "",
+    "createdAt": "2026-05-21T07:02:19+00:00",
+    "media": [
+      {
+        "kind": "image",
+        "src": "img/works/creek.webp"
+      }
+    ],
+    "content": {
+      "kind": "image",
+      "src": "img/works/creek.webp",
+      "poster": "img/works/creek.webp",
+      "link": "",
+      "modelFormat": ""
+    }
+  },
+  {
+    "id": "work-031",
+    "title": "Cafe In Dali",
+    "year": "2025",
+    "type": "painting",
+    "series": "vision enchanted",
+    "medium": "oil painting",
+    "size": "",
+    "thumbnail": "img/works/Dali.webp",
+    "image": "img/works/Dali.webp",
+    "description": "",
+    "createdAt": "2026-05-21T07:04:01+00:00",
+    "media": [
+      {
+        "kind": "image",
+        "src": "img/works/Dali.webp"
+      }
+    ],
+    "content": {
+      "kind": "image",
+      "src": "img/works/Dali.webp",
+      "poster": "img/works/Dali.webp",
       "link": "",
       "modelFormat": ""
     }

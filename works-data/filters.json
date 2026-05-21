@@ -7,13 +7,15 @@
         "painting",
         "mixed-media",
         "sculpture",
-        "video"
+        "video",
+        "photography"
       ]
     },
     {
       "key": "year",
       "label": "Year",
       "options": [
+        "2023",
         "2024",
         "2025",
         "2026"
@@ -25,7 +27,8 @@
       "options": [
         "female divinity",
         "quantum refraction",
-        "physical plane"
+        "physical plane",
+        "vision enchanted"
       ]
     }
   ]
